@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom"
+import Grid from './Grid.js'
 
-import UserList from './UserList.js'
 export default class Main extends React.Component{
   render(){
     return (
       <div>
-      <UserList />
+      <Grid />
       </div>
     )
   }
