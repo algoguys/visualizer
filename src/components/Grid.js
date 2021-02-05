@@ -36,7 +36,7 @@ const makeGrid = (x, y) => {
   return grid
 }
 
-let grid = makeGrid(3, 3);
+// let grid = makeGrid(3, 3);
 
 // start point = node 3 aka grid[3]
 // end point = node 6 aka grid[6]
@@ -52,6 +52,7 @@ const dfsTraversal = (startNode, endNode, visited = []) => {
 
   console.log('startNode', grid[startNode])
   console.log('are we at endNode?', grid[startNode] === grid[endNode])
+
   if (grid[startNode] === grid[endNode]) {
     console.log('found end node')
     return 'found end node' // base case
@@ -68,7 +69,7 @@ const dfsTraversal = (startNode, endNode, visited = []) => {
 //! add a way to handle the case where every surrounding node has been visited
 // this problem occurs with a 3x3 grid with startNode = 1, and endNode = 8
 
-dfsTraversal(0, 8)
+// dfsTraversal(0, 8)
 
 // // example of hardcoded 3x3 grid
 // [
@@ -88,6 +89,92 @@ dfsTraversal(0, 8)
 //      3 - 4 - 5  && j === 3 - 5
 //      l   l   l
 //      6 - 7 - 8  && j === 6 - 8
+
+const makeAdjList = (width, height) => {
+  // take width and height
+  // num of nodes = width * height
+  // iterate thru nodes
+  // add top neighbor, right neighbor, bottom neighbor, left neighbor
+  // return the list once every node is assigned neighbors
+  const adjList = {}
+
+  let x = 0
+  let y = 0
+
+  for (let node = 0; node < width * height; node++) {
+    // console.log('adjList on each iteration:', adjList)
+    // console.log('node on iteration:', node)
+
+    adjList[node] = {}
+
+    // assign id
+    adjList[node].id = node
+
+    // assign x, y coords
+    // if we are at a new row
+    if (node % width === 0 && node > 0) y++
+
+    // increment x, or set to 0 if on new row
+    if (node % width === 0) {
+      x = 0
+    } else {
+      x++
+    }
+
+
+    adjList[node].x = x
+    adjList[node].y = y
+
+    const neighbors = []
+    // add top neighbor
+    if (node - width >= 0) neighbors.push(node - width)
+
+    // add right neighbor
+    // check if next node is within bounds of grid will and be on same row
+    if (node + 1 < width * height && Math.floor((node + 1) / width) === Math.floor(node / width)) neighbors.push(node + 1)
+
+    // add bottom neighbor
+    if (node + width < width * height) neighbors.push(node + width)
+
+    // add left neighbor
+    if (node - 1 >= 0 && Math.floor((node - 1) / width) === Math.floor(node / width)) neighbors.push(node - 1)
+
+    adjList[node].neighbors = neighbors
+
+
+  }
+
+
+  return adjList
+}
+
+const adjList = makeAdjList(100, 100)
+console.log(adjList)
+
+//      0 - 1 - 2
+//      l   l   l
+//      3 - 4 - 5
+//      l   l   l
+//      6 - 7 - 8
+
+// example of 3x3 grid adj list
+// {
+//   0: [1, 3],
+//   1: [0, 2, 4],
+//   2: [1, 5],
+//   3: [0, 4, 6],
+//   4: [1, 5, 7, 3],
+//   5: [2, 8, 4],
+//   6: [3, 7],
+//   7: [4, 8, 6],
+//   8: [7, 5],
+// }
+
+// 00 - 01 - 02 - 03
+// 04 - 05 - 06 - 07
+// 08 - 09 - 10 - 11
+// 12 - 13 - 14 - 15
+
 
 
 export default class App extends React.Component{
