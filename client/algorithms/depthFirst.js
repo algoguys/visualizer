@@ -5,8 +5,8 @@ import makeAdjList from '../data/adjList'
 // stop if we hit the endNode (base case, return the path to get to endNode)
 // go to next available adj node (recursive case) until we run out of adj nodes
 
-const grid = makeAdjList(4, 4) //? importing makeAdjList for testing purposes, later add back to Grid component
-console.log(grid)
+//const grid = makeAdjList(4, 4) //? importing makeAdjList for testing purposes, later add back to Grid component
+//console.log(grid)
 
 const dfsTraversal = (startId, endId, visited = []) => {
 
