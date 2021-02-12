@@ -1,35 +1,36 @@
-// let grid = makeGrid(3, 3);
-
-// start point = node 3 aka grid[3]
-// end point = node 6 aka grid[6]
+import makeAdjList from '../data/adjList'
 
 // from the startNode, iterate/recurse thru each node it may be connected to
 // mark each node we visit (table to memoize or something else???)
 // stop if we hit the endNode (base case, return the path to get to endNode)
 // go to next available adj node (recursive case) until we run out of adj nodes
 
-const dfsTraversal = (startNode, endNode, visited = []) => {
+const grid = makeAdjList(4, 4) //? importing makeAdjList for testing purposes, later add back to Grid component
+console.log(grid)
 
-  visited.push(startNode)
+const dfsTraversal = (startId, endId, visited = []) => {
 
-  console.log('startNode', grid[startNode])
-  console.log('are we at endNode?', grid[startNode] === grid[endNode])
+  visited.push(startId)
 
-  if (grid[startNode] === grid[endNode]) {
+  console.log('are we at endNode?', grid[startId] === grid[endId])
+
+  if (startId === endId) {
     console.log('found end node')
-    return 'found end node' // base case
-  }
-  for (let i = 0; i < grid[startNode].length; i++) {
-    if (grid[startNode][i] === 1 && !visited.includes(i)) {
-      console.log(`next startNode: grid[${i}]`)
-      return dfsTraversal(i, endNode, visited)
+    return startId // base case, return current node id
+  } else {
+    const neighbors = grid[startId].neighbors
+    console.log('neighbors', neighbors)
+    for (let i = 0; i < neighbors.length; i++) {
+      const neighborId = neighbors[i]
+      if (!visited.includes(neighborId)) {
+        console.log(`next node: grid[${neighborId}]`)
+        const response = dfsTraversal(neighborId, endId, visited)
+        if (response === endId) {
+          return response
+        }
+      }
     }
   }
-
 }
 
-//! add a way to handle the case where every surrounding node has been visited
-// this problem occurs with a 3x3 grid with startNode = 1, and endNode = 8
-
-// dfsTraversal(0, 8)
-
+export default dfsTraversal

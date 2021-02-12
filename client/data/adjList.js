@@ -38,6 +38,7 @@ export default (width, height) => {
     adjList[node].y = y
 
     const neighbors = []
+
     // add top neighbor
     if (node - width >= 0) neighbors.push(node - width)
 
@@ -51,7 +52,7 @@ export default (width, height) => {
     // add left neighbor
     if (node - 1 >= 0 && Math.floor((node - 1) / width) === Math.floor(node / width)) neighbors.push(node - 1)
 
-    adjList[node].neighbors = neighbors
+    adjList[node].neighbors = [...neighbors]
 
   }
 
@@ -69,15 +70,29 @@ export default (width, height) => {
 
 // example of 3x3 grid adj list
 // {
-//   0: [1, 3],
-//   1: [0, 2, 4],
-//   2: [1, 5],
-//   3: [0, 4, 6],
-//   4: [1, 5, 7, 3],
-//   5: [2, 8, 4],
-//   6: [3, 7],
-//   7: [4, 8, 6],
-//   8: [7, 5],
+//   0: {
+//     id: 0,
+//     neighbors: [1, 3],
+//     x: 0,
+//     y: 0,
+//   },
+
+//   1: {
+//     id: 1,
+//     neighbors: [0, 2, 4],
+//     x: 1
+//     y: 0
+//   },
+
+//   2: {
+//     id: 2
+//     neighbors: [1, 5],
+//     x: 2,
+//     y: 0,
+//   },
+
+//   ...
+
 // }
 
 // 00 - 01 - 02 - 03
