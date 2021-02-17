@@ -1,5 +1,7 @@
 import makeAdjList from '../data/adjList'
 
+import store from '../store';
+
 // from the startNode, iterate/recurse thru each node it may be connected to
 // mark each node we visit (table to memoize or something else???)
 // stop if we hit the endNode (base case, return the path to get to endNode)
