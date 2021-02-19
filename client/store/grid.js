@@ -1,5 +1,4 @@
 import makeAdjList from '../data/adjList'
-//! grid = makeAdjList
 
 /**
  * INITIAL STATE
