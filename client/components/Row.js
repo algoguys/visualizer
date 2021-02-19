@@ -1,15 +1,19 @@
 import React from "react";
 
-export default class Row extends React.Component{
-  render(){
+const Row = (props) => {
     return (
       <tr>
         {
-          this.props.widthArr.map(((cell, idx) => {
-            return <td key={idx}></td>
+          props.widthArr.map(((cell, idx) => {
+
+            const cellId = (props.rowId * props.widthArr.length) + idx
+
+            return <td key={idx} cellid={cellId} onClick={() => alert(`you clicked on cell # ${cellId}`)}></td>
           }))
         }
       </tr>
     )
-  }
+
 }
+
+export default Row

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { connect, useSelector, useDispatch } from 'react-redux'
-import makeAdjList from "../data/adjList";
-import dfsTraversal from "../algorithms/depthFirst"
+import { useSelector, useDispatch } from 'react-redux'
 import { makeGrid } from '../store/grid'
 import Row from "./Row"
 
@@ -33,7 +31,7 @@ const App = () => {
         <tbody>
           {
             heightArr.map((row, idx) => {
-              return <Row key={idx} widthArr={widthArr} />
+              return <Row key={idx} rowId={idx} widthArr={widthArr} />
             })
           }
         </tbody>
