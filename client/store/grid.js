@@ -17,10 +17,10 @@ const UPDATE_NODE = 'UPDATE_NODE' //? update the node type, when we implement co
 /**
  * ACTION CREATORS
  */
-const getNode = nodeId => ({type:GET_NODE, nodeId})
-const getGrid = () => ({type:GET_GRID})
+export const getNode = nodeId => ({type:GET_NODE, nodeId})
+export const getGrid = () => ({type:GET_GRID})
 export const makeGrid = (width, height) => ({type: MAKE_GRID, width, height})
-const updateNode = type => ({type: UPDATE_NODE, type})
+export const updateNode = type => ({type: UPDATE_NODE, type})
 
 /**
  * REDUCER

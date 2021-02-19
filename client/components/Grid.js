@@ -23,27 +23,27 @@ const App = () => {
 
   console.log('grid in component', grid)
 
-  // dfsTraversal(5, 13)
-
   let div
 
   if (Object.keys(grid).length > 0) {
-    div = <div>
-    <table>
-      <tbody>
-        {
-          heightArr.map((row, idx) => {
-            return <Row key={idx} widthArr={widthArr} />
-          })
-        }
-      </tbody>
-    </table>
-  </div>
-  }
-  else {
-    div = <div>
+    div =
+    <div>
+      <p>{grid['0'].neighbors}</p>
+      <table>
+        <tbody>
+          {
+            heightArr.map((row, idx) => {
+              return <Row key={idx} widthArr={widthArr} />
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+  } else {
+    div =
+    <div>
       <h1>Loading Grid...</h1>
-  </div>
+    </div>
   }
 
   return div
