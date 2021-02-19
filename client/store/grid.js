@@ -1,4 +1,4 @@
-//! import makeAdjList
+import makeAdjList from '../data/adjList'
 //! grid = makeAdjList
 
 /**
@@ -19,7 +19,7 @@ const UPDATE_NODE = 'UPDATE_NODE' //? update the node type, when we implement co
  */
 const getNode = nodeId => ({type:GET_NODE, nodeId})
 const getGrid = () => ({type:GET_GRID})
-const makeGrid = (width, height) => ({type: MAKE_GRID, width, height})
+export const makeGrid = (width, height) => ({type: MAKE_GRID, width, height})
 const updateNode = type => ({type: UPDATE_NODE, type})
 
 /**
@@ -29,6 +29,9 @@ export default function(state = grid, action) {
   switch (action.type) {
     case GET_GRID:
       return state
+    case MAKE_GRID:
+      const grid = makeAdjList(action.width, action.height)
+      return grid
     default:
       return state
   }
