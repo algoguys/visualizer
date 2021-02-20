@@ -8,30 +8,32 @@
 
 const dfsTraversal = (grid) => {
 
-  return (startId = grid.start, endId = grid.end, visited = []) => {
+  return function findPath (startId, endId, visited = []) {
     visited.push(startId)
 
-    console.log('are we at endNode?', grid[startId] === grid[endId])
+    //console.log('are we at endNode?', grid[startId] === grid[endId])
 
     if (startId === endId) {
-      console.log('found end node')
-      return startId // base case, return current node id
+      //console.log('found end node')
+      return [ startId ] // base case, return array with current node id
     } else {
       const neighbors = grid[startId].neighbors
-      console.log('neighbors', neighbors)
+      //console.log('neighbors', neighbors)
       for (let i = 0; i < neighbors.length; i++) {
         const neighborId = neighbors[i]
         if (!visited.includes(neighborId)) {
-          console.log(`next node: grid[${neighborId}]`)
-          const response = dfsTraversal(neighborId, endId, visited)
-          if (response === endId) {
+          //console.log(`next node: grid[${neighborId}]`)
+          const response = findPath(neighborId, endId, visited)
+          // if response is an array, add current node id to the front of the array
+          if (Array.isArray(response) && response[response.length - 1] === endId) {
+            response.unshift(startId)
             return response
           }
         }
       }
     }
   }
-
+  //return findPath(grid.start, grid.end);
 }
 
 export default dfsTraversal

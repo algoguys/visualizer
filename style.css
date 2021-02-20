@@ -13,8 +13,18 @@ table {
 }
 
 .wall {
-  background-color: black;
+  background-color: darkblue;
 }
+
+.start {
+  background-color: green
+}
+
+.end {
+  background-color: red
+}
+
+.
 
 
 

@@ -26,7 +26,6 @@ const App = () => {
   if (Object.keys(grid).length > 0) {
     div =
     <div>
-      <p>{grid['0'].neighbors}</p>
       <table>
         <tbody>
           {

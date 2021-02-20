@@ -9,10 +9,14 @@ const Row = (props) => {
       <tr>
         {
           props.widthArr.map(((cell, idx) => {
-
+            // calculate id to be associated with grid obj of the current cell
             const cellId = (props.rowId * props.widthArr.length) + idx
+            // assign class based on cell type
+            let typeClass = "unvisited"
+            if (grid[cellId].type === 'start') typeClass = "start"
+            else if (grid[cellId].type === 'end') typeClass = "end"
 
-            return <td key={idx} cellid={cellId} onClick={() => alert(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)}></td>
+          return <td key={idx} cellid={cellId} className={typeClass} onClick={() => alert(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)}></td>
           }))
         }
       </tr>
