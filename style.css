@@ -8,12 +8,13 @@ td {
 
 table {
   /* Controls color of outlines*/
-  background-color: #006280;
+  /* 006280 */
+  background-color: #b8b8b8;
   border-spacing: 1px;
 }
 
 .wall {
-  background-color: darkblue;
+  background-color: #00232e;
 }
 
 .start {
@@ -22,6 +23,14 @@ table {
 
 .end {
   background-color: red
+}
+
+.shortestPath {
+  background-color: gold;
+}
+
+.visited {
+  background-color: #006280
 }
 
 .

@@ -36,7 +36,6 @@ export default (width, height) => {
     adjList[node].y = y
 
     // initialize node's type property
-    console.log(Math.floor(height / 2) * Math.floor(width / 4))
     if ((Math.floor(height / 2) === adjList[node].y && Math.floor(width / 4) === adjList[node].x) ) {
       adjList[node].type = 'start'
       adjList.start = node

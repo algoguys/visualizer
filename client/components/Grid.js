@@ -10,10 +10,10 @@ const App = () => {
 
   const grid = useSelector(state => state.grid)
 
-  const dispatch = useDispatch()
+  const createGrid = useDispatch()
 
   useEffect(() => {
-    dispatch(makeGrid(width, height))
+    createGrid(makeGrid(width, height))
   }, []); // [] makes it only fire once, like componentDidMount
 
   const heightArr = Array(height).fill(' ');

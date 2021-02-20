@@ -15,7 +15,7 @@ const dfsTraversal = (grid) => {
 
     if (startId === endId) {
       //console.log('found end node')
-      return [ startId ] // base case, return array with current node id
+      return {visited, shortestPath: [startId]} // base case, return array with current node id
     } else {
       const neighbors = grid[startId].neighbors
       //console.log('neighbors', neighbors)
@@ -25,8 +25,8 @@ const dfsTraversal = (grid) => {
           //console.log(`next node: grid[${neighborId}]`)
           const response = findPath(neighborId, endId, visited)
           // if response is an array, add current node id to the front of the array
-          if (Array.isArray(response) && response[response.length - 1] === endId) {
-            response.unshift(startId)
+          if (response.shortestPath[response.shortestPath.length - 1] === endId) {
+            response.shortestPath.unshift(startId)
             return response
           }
         }

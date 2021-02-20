@@ -15,8 +15,10 @@ const Row = (props) => {
             let typeClass = "unvisited"
             if (grid[cellId].type === 'start') typeClass = "start"
             else if (grid[cellId].type === 'end') typeClass = "end"
+            else if (grid[cellId].type === 'visited') typeClass = "visited"
+            else if (grid[cellId].type === 'shortestPath') typeClass = "shortestPath"
 
-          return <td key={idx} cellid={cellId} className={typeClass} onClick={() => alert(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)}></td>
+          return <td key={idx} cellid={cellId} className={typeClass} onClick={() => alert(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)}>{grid[cellId].id}</td>
           }))
         }
       </tr>
