@@ -14,8 +14,6 @@ export default (width, height) => {
   let y = 0
 
   for (let node = 0; node < width * height; node++) {
-    // console.log('adjList on each iteration:', adjList)
-    // console.log('node on iteration:', node)
 
     // initialize empty node object
     adjList[node] = {}
@@ -37,6 +35,20 @@ export default (width, height) => {
     adjList[node].x = x
     adjList[node].y = y
 
+    // initilize node's status property
+    adjList[node].status = 'unvisited'
+
+    // initialize node's type property
+    if ((Math.floor(height / 2) === adjList[node].y && Math.floor(width / 4) === adjList[node].x) ) {
+      adjList[node].type = 'start'
+      adjList.start = node
+    } else if ((Math.floor(height / 2) === adjList[node].y && Math.floor(width / 4 * 3) === adjList[node].x) ) {
+      adjList[node].type = 'end'
+      adjList.end = node
+    } else {
+      adjList[node].type = 'normal'
+    }
+
     const neighbors = []
 
     // add top neighbor
@@ -53,7 +65,6 @@ export default (width, height) => {
     if (node - 1 >= 0 && Math.floor((node - 1) / width) === Math.floor(node / width)) neighbors.push(node - 1)
 
     adjList[node].neighbors = [...neighbors]
-
   }
 
   return adjList
@@ -80,8 +91,8 @@ export default (width, height) => {
 //   1: {
 //     id: 1,
 //     neighbors: [0, 2, 4],
-//     x: 1
-//     y: 0
+//     x: 1,
+//     y: 0,
 //   },
 
 //   2: {
