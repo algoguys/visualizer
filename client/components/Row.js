@@ -1,9 +1,14 @@
-import React from "react";
-import { useSelector } from 'react-redux'
+import React, { useState}from "react";
+import { useSelector, useDispatch } from 'react-redux'
+import { updateNode } from '../store/grid'
+import { setTrue, setFalse} from '../store/drawing'
 
 const Row = (props) => {
-
+  const isDrawing = useSelector(state => state.isDrawing)
   const grid = useSelector(state => state.grid)
+  const updateCell = useDispatch()
+  const setDrawingTrue = useDispatch()
+  const setDrawingFalse = useDispatch()
 
     return (
       <tr>
@@ -12,13 +17,41 @@ const Row = (props) => {
             // calculate id to be associated with grid obj of the current cell
             const cellId = (props.rowId * props.widthArr.length) + idx
             // assign class based on cell type
-            let typeClass = "unvisited"
+            let typeClass = "normal"
             if (grid[cellId].type === 'start') typeClass = "start"
             else if (grid[cellId].type === 'end') typeClass = "end"
-            else if (grid[cellId].type === 'visited') typeClass = "visited"
-            else if (grid[cellId].type === 'shortestPath') typeClass = "shortestPath"
+            else if (grid[cellId].type === 'normal') typeClass = "normal"
+            else if (grid[cellId].type === 'wall') typeClass = "wall"
 
-          return <td key={idx} cellid={cellId} className={typeClass} onClick={() => alert(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)}>{grid[cellId].id}</td>
+
+            let visitedClass = "unvisited"
+            if(grid[cellId].status === 'unvisited') visitedClass = "unvisited"
+            else if (grid[cellId].status === 'visited') visitedClass = "visited"
+            else if (grid[cellId].status === 'shortestPath') visitedClass = "shortestPath"
+
+          return <td key={idx} cellid={cellId} className={`${typeClass} ${visitedClass}`}
+          onClick={() => {
+
+            console.log(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)
+
+          }}
+          onMouseDown={() => {
+            setDrawingTrue(setTrue());
+            console.log(isDrawing)
+          }}
+          onMouseOver={() => {
+            console.log('isDrawing', isDrawing)
+            if(isDrawing.isDrawing){
+              let newType = grid[cellId].type === 'wall' ? 'unvisited' : 'wall'
+              if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
+                updateCell(updateNode(cellId, newType))
+              }
+            }
+          }}
+          onMouseUp={() => {
+            setDrawingFalse(setFalse())
+          }}
+          ></td>
           }))
         }
       </tr>

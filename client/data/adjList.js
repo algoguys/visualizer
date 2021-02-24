@@ -35,6 +35,9 @@ export default (width, height) => {
     adjList[node].x = x
     adjList[node].y = y
 
+    // initilize node's status property
+    adjList[node].status = 'unvisited'
+
     // initialize node's type property
     if ((Math.floor(height / 2) === adjList[node].y && Math.floor(width / 4) === adjList[node].x) ) {
       adjList[node].type = 'start'

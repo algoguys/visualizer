@@ -10,7 +10,7 @@ const Controls = (props) => {
 
   const updateCell = useDispatch()
   //?! tie speed into state
-  const speed = 100;
+  const speed = 50;
 
   return (
     <button onClick ={() => {

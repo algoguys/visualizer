@@ -17,23 +17,39 @@ table {
   background-color: #00232e;
 }
 
-.start {
-  background-color: green
-}
 
-.end {
-  background-color: red
-}
+
 
 .shortestPath {
   background-color: gold;
 }
 
 .visited {
-  background-color: #006280
+  background-color: #006280;
 }
 
-.
+.start.unvisited {
+  background-color: green;
+}
+
+.start.visited{
+  background-color: darkgreen;
+}
+
+.start.shortestPath {
+  background-color: darkgreen;
+}
+
+
+.end.unvisited {
+  background-color: red;
+}
+.end.visited {
+  background-color: darkred;
+}
+.end.shortestPath{
+  background-color: darkred;
+}
 
 
 
