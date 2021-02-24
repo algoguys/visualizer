@@ -21,16 +21,19 @@ const dfsTraversal = (grid) => {
       //console.log('neighbors', neighbors)
       for (let i = 0; i < neighbors.length; i++) {
         const neighborId = neighbors[i]
-        if (!visited.includes(neighborId)) {
+        if (!visited.includes(neighborId) && grid[neighborId].type !== 'wall') {
           //console.log(`next node: grid[${neighborId}]`)
           const response = findPath(neighborId, endId, visited)
+          //console.log('response', response)
           // if response is an array, add current node id to the front of the array
-          if (response.shortestPath[response.shortestPath.length - 1] === endId) {
+          if (response && response.shortestPath[response.shortestPath.length - 1] === endId) {
             response.shortestPath.unshift(startId)
             return response
           }
         }
       }
+
+      return { visited: visited, shortestPath: [] }
     }
   }
   //return findPath(grid.start, grid.end);

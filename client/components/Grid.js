@@ -19,8 +19,6 @@ const App = () => {
   const heightArr = Array(height).fill(' ');
   const widthArr = Array(width).fill(' ');
 
-  console.log('grid in component', grid)
-
   let div
 
   if (Object.keys(grid).length > 0) {

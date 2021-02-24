@@ -35,14 +35,10 @@ export default function(state = grid, action) {
       const grid = makeAdjList(action.width, action.height)
       return grid
     case UPDATE_STATUS:
-      console.log('state', state)
       state[action.id].status = action.nodeStatus;
-      console.log('updated type to ', action.nodeStatus)
       return { ...state }
       case UPDATE_TYPE:
-        console.log('state', state)
         state[action.id].type = action.nodeType;
-        console.log('updated type to ', action.nodeType)
         return { ...state }
 
       //console.log('update node--->\n', temp);

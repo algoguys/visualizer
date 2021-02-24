@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import dfsTraversal from '../algorithms/depthFirst'
 import { updateStatus } from '../store/grid'
+import { type } from "jquery";
 
 const Controls = (props) => {
 
@@ -10,20 +11,33 @@ const Controls = (props) => {
 
   const updateCell = useDispatch()
   //?! tie speed into state
-  const speed = 50;
+  const speed = 40;
 
   return (
     <button onClick ={() => {
       console.log('calling DFS Traversal!')
+
+      //sorted array of properties in grid that correspond to node ids
+      let keys = Object.keys(grid).sort((a, b) => a - b)
+
+      //loops through keys to update status on each node before executing search
+      keys.forEach((nodeId, idx) => {
+        if(idx < keys.length - 2) {
+          updateCell(updateStatus(nodeId, 'unvisited'))
+        }
+      })
+
+
       const dfsResults = depthFirst(grid.start, grid.end)
       console.log('results', dfsResults)
+
 
       // Use setTimeout to
       dfsResults.visited.forEach((nodeId, idx) => {
         setTimeout(() => {
-          console.log('visited', nodeId)
+          //console.log('visited', nodeId)
           updateCell(updateStatus(nodeId, 'visited'))
-          console.log(nodeId, 'type updated to', grid[nodeId].type)
+          //console.log(nodeId, 'type updated to', grid[nodeId].type)
         }, idx * speed) //?! update time to tie to speed var on state
 
         //idx 0 = 0 timeout
@@ -43,9 +57,9 @@ const Controls = (props) => {
       setTimeout( () => {
         dfsResults.shortestPath.forEach((nodeId, idx) => {
           setTimeout(() => { // controls timeout for shortestPath
-            console.log('shortestPath', nodeId)
+            //console.log('shortestPath', nodeId)
             updateCell(updateStatus(nodeId, 'shortestPath'))
-            console.log(nodeId, 'type updated to', grid[nodeId].type)
+            //console.log(nodeId, 'type updated to', grid[nodeId].type)
           }, idx * speed) //?! update time to tie to speed var on state
         })
 

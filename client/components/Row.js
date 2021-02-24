@@ -42,10 +42,8 @@ const Row = (props) => {
           }}
           onMouseDown={() => {
             setDrawingTrue(setTrue());
-            console.log(isDrawing)
           }}
           onMouseOver={() => {
-            console.log('isDrawing', isDrawing)
             if(isDrawing.isDrawing){
               let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
               if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
