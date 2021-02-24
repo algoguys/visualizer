@@ -20,8 +20,12 @@ table {
 
 
 
-.shortestPath {
+.shortestPath.normal {
   background-color: gold;
+}
+
+.shortestPath.wall {
+  background-color: #00232e;
 }
 
 .visited {

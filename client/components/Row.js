@@ -1,6 +1,6 @@
 import React, { useState}from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { updateNode } from '../store/grid'
+import { updateType } from '../store/grid'
 import { setTrue, setFalse} from '../store/drawing'
 
 const Row = (props) => {
@@ -31,7 +31,12 @@ const Row = (props) => {
 
           return <td key={idx} cellid={cellId} className={`${typeClass} ${visitedClass}`}
           onClick={() => {
+            let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
+            if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
+              updateCell(updateType(cellId, newType))
+            }
 
+            //?! delete me eventually
             console.log(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)
 
           }}
@@ -42,9 +47,9 @@ const Row = (props) => {
           onMouseOver={() => {
             console.log('isDrawing', isDrawing)
             if(isDrawing.isDrawing){
-              let newType = grid[cellId].type === 'wall' ? 'unvisited' : 'wall'
+              let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
               if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
-                updateCell(updateNode(cellId, newType))
+                updateCell(updateType(cellId, newType))
               }
             }
           }}

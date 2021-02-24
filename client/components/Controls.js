@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import dfsTraversal from '../algorithms/depthFirst'
-import { updateNode } from '../store/grid'
+import { updateStatus } from '../store/grid'
 
 const Controls = (props) => {
 
@@ -22,7 +22,7 @@ const Controls = (props) => {
       dfsResults.visited.forEach((nodeId, idx) => {
         setTimeout(() => {
           console.log('visited', nodeId)
-          updateCell(updateNode(nodeId, 'visited'))
+          updateCell(updateStatus(nodeId, 'visited'))
           console.log(nodeId, 'type updated to', grid[nodeId].type)
         }, idx * speed) //?! update time to tie to speed var on state
 
@@ -44,7 +44,7 @@ const Controls = (props) => {
         dfsResults.shortestPath.forEach((nodeId, idx) => {
           setTimeout(() => { // controls timeout for shortestPath
             console.log('shortestPath', nodeId)
-            updateCell(updateNode(nodeId, 'shortestPath'))
+            updateCell(updateStatus(nodeId, 'shortestPath'))
             console.log(nodeId, 'type updated to', grid[nodeId].type)
           }, idx * speed) //?! update time to tie to speed var on state
         })

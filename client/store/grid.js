@@ -11,7 +11,8 @@ const grid = {}
 const GET_NODE = 'GET_NODE' // return node object at given id
 const GET_GRID = 'GET_GRID' // return entire grid object
 const MAKE_GRID = 'MAKE_GRID' // create the grid
-const UPDATE_NODE = 'UPDATE_NODE' //? update the node type, when we implement controls
+const UPDATE_STATUS = 'UPDATE_STATUS' //? update the node status, when we implement controls
+const UPDATE_TYPE = 'UPDATE_TYPE' //? update the node type, when we implement controls
 
 /**
  * ACTION CREATORS
@@ -19,7 +20,8 @@ const UPDATE_NODE = 'UPDATE_NODE' //? update the node type, when we implement co
 export const getNode = nodeId => ({type:GET_NODE, nodeId})
 export const getGrid = () => ({type:GET_GRID})
 export const makeGrid = (width, height) => ({type: MAKE_GRID, width, height})
-export const updateNode = (id, nodeStatus) => ({type: UPDATE_NODE, id, nodeStatus})
+export const updateStatus = (id, nodeStatus) => ({type: UPDATE_STATUS, id, nodeStatus})
+export const updateType = (id, nodeType) => ({type: UPDATE_TYPE, id, nodeType})
 
 
 /**
@@ -32,11 +34,16 @@ export default function(state = grid, action) {
     case MAKE_GRID:
       const grid = makeAdjList(action.width, action.height)
       return grid
-    case UPDATE_NODE:
+    case UPDATE_STATUS:
       console.log('state', state)
       state[action.id].status = action.nodeStatus;
       console.log('updated type to ', action.nodeStatus)
       return { ...state }
+      case UPDATE_TYPE:
+        console.log('state', state)
+        state[action.id].type = action.nodeType;
+        console.log('updated type to ', action.nodeType)
+        return { ...state }
 
       //console.log('update node--->\n', temp);
       //return [...grid, grid[action.id].type = action.nodeType]
