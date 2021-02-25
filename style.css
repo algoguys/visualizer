@@ -3,68 +3,94 @@ td {
   width: 25px;
   transition: background-color 0.35s ease;
   /* Controls color of cells*/
-  background-color: #e6f9ff;
+  /* background-color: #e6f9ff; */
+  background-color: white;
+}
+
+td #startNodeIcon {
+  display: block;
+  margin: auto;
+}
+
+#startNodeIcon {
+  font-weight: bold;
+  /* font-size: 1.45rem; */
+}
+
+td #endNodeIcon {
+  display: block;
+  margin: auto;
+  /* font-size: 1.45rem; */
+  color: #D12300;
+}
+
+.keybox #startKeyIcon {
+  display: block;
+  margin: auto;
+  margin-top: .2rem;
+  /* font-size: 1.45rem; */
+}
+
+.keybox #endKeyIcon {
+  display: block;
+  margin: auto;
+  margin-top: .2rem;
+  /* font-size: 1.45rem; */
+  color: #D12300;
 }
 
 table {
   /* Controls color of outlines*/
   /* 006280 */
-  background-color: #b8b8b8;
+  background-color: #dbe9f4;
   border-spacing: 1px;
 }
 
+/* types */
 .wall {
-  background-color: #00232e;
+  background-color: #36496A;
+}
+.start {
+  background-color: white;
+}
+.end {
+  background-color: white;
+}
+
+/* statuses */
+.visited {
+  background-color: #8fb8d7;
+  /* background-color: #00B383;
+  background-color: #00B0E6; */
+}
+.start.visited{
+  background-color: #8fb8d7;
+  /* background-color: #00B383;
+  background-color: #00B0E6; */
+}
+.end.visited {
+  background-color: #8fb8d7;
+  /* background-color: #00B383;
+  background-color: #00B0E6; */
+}
+.wall.visited{
+  background-color: #36496A;
 }
 
 .shortestPath {
-  background-color: gold;
+  background-color: #FFE017;
 }
-
-.shortestPath.normal {
-  background-color: gold;
-}
-
-.shortestPath.wall {
-  background-color: #00232e;
-}
-
-.visited {
-  background-color: #006280;
-}
-
-.start {
-  background-color: green;
-}
-.start.unvisited {
-  background-color: green;
-}
-
-.start.visited{
-  background-color: darkgreen;
-}
-
 .start.shortestPath {
-  background-color: darkgreen;
-}
-
-.end {
-  background-color: red;
-}
-.end.unvisited {
-  background-color: red;
-}
-.end.visited {
-  background-color: darkred;
+  background-color: #FFE017;
 }
 .end.shortestPath{
-  background-color: darkred;
+  background-color: #FFE017;
+}
+.wall.shortestPath {
+  background-color: #36496A;
 }
 
-.wall.visited{
-  background-color: #00232e;
-}
-
+/* GridKey Component */
 .gridKey {
   display: flex;
   justify-content: space-evenly;
@@ -75,13 +101,31 @@ table {
   justify-content: center;
   align-items: center;
 }
+.keyitem h3 {
+  font-size: 1rem;
+}
 
 .keybox {
   height: 25px;
   width: 25px;
-  border: 1px solid black;
-  margin-right: 1em;
+  border: 1px solid #dbe9f4;
+  margin-right: 1rem;
 }
+
+#playAlgo {
+  color: #36496A;
+  margin: 1rem;
+}
+#playAlgo:hover {
+  color: #3C7AA9;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 
 

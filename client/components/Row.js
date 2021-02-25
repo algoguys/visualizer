@@ -2,6 +2,9 @@ import React, { useState}from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateType } from '../store/grid'
 import { setTrue, setFalse} from '../store/drawing'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronRight, faMapMarker} from '@fortawesome/free-solid-svg-icons'
+
 
 const Row = (props) => {
   const isDrawing = useSelector(state => state.isDrawing)
@@ -18,7 +21,9 @@ const Row = (props) => {
             const cellId = (props.rowId * props.widthArr.length) + idx
             // assign class based on cell type
             let typeClass = "normal"
-            if (grid[cellId].type === 'start') typeClass = "start"
+            if (grid[cellId].type === 'start') {
+              typeClass = "start"
+            }
             else if (grid[cellId].type === 'end') typeClass = "end"
             else if (grid[cellId].type === 'normal') typeClass = "normal"
             else if (grid[cellId].type === 'wall') typeClass = "wall"
@@ -54,7 +59,12 @@ const Row = (props) => {
           onMouseUp={() => {
             setDrawingFalse(setFalse())
           }}
-          ></td>
+        >
+          {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
+
+          {grid[cellId].type === "end" && <FontAwesomeIcon id="endNodeIcon" icon={faMapMarker} />}
+
+          </td>
           }))
         }
       </tr>
