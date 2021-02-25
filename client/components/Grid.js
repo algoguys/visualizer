@@ -5,8 +5,10 @@ import Row from "./Row"
 
 const App = () => {
 
-  const [width, setWidth] = useState(Math.floor((window.innerWidth-20)/75));
-  const [height, setHeight] = useState(Math.floor((window.innerHeight-200)/75));
+  const [width, setWidth] = useState(Math.floor(document.getElementById('main').offsetWidth/25));
+
+  console.log(width)
+  const [height, setHeight] = useState(Math.floor((window.innerHeight-200)/25));
 
   const grid = useSelector(state => state.grid)
 

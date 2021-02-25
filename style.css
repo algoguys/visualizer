@@ -1,6 +1,6 @@
 td {
-  height: 75px;
-  width: 75px;
+  height: 25px;
+  width: 25px;
   transition: background-color 0.35s ease;
   /* Controls color of cells*/
   background-color: #e6f9ff;
@@ -17,8 +17,9 @@ table {
   background-color: #00232e;
 }
 
-
-
+.shortestPath {
+  background-color: gold;
+}
 
 .shortestPath.normal {
   background-color: gold;
@@ -32,6 +33,9 @@ table {
   background-color: #006280;
 }
 
+.start {
+  background-color: green;
+}
 .start.unvisited {
   background-color: green;
 }
@@ -44,7 +48,9 @@ table {
   background-color: darkgreen;
 }
 
-
+.end {
+  background-color: red;
+}
 .end.unvisited {
   background-color: red;
 }
@@ -57,6 +63,24 @@ table {
 
 .wall.visited{
   background-color: #00232e;
+}
+
+.gridKey {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.keyitem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.keybox {
+  height: 25px;
+  width: 25px;
+  border: 1px solid black;
+  margin-right: 1em;
 }
 
 
