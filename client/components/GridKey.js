@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronRight, faMapMarker} from '@fortawesome/free-solid-svg-icons'
+import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg-icons'
 
 const GridKey = (props) => {
   return (
@@ -13,7 +13,7 @@ const GridKey = (props) => {
     </div>
     <div className='keyitem'>
       <div className='keybox end'>
-        <FontAwesomeIcon id="endKeyIcon" icon={faMapMarker} />
+        <FontAwesomeIcon id="endKeyIcon" icon={faTimes} />
       </div>
       <h3>End</h3>
     </div>

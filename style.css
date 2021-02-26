@@ -21,22 +21,22 @@ td #endNodeIcon {
   display: block;
   margin: auto;
   /* font-size: 1.45rem; */
-  color: #D12300;
+  color: #d12300;
 }
 
 .keybox #startKeyIcon {
   display: block;
   margin: auto;
-  margin-top: .2rem;
+  margin-top: 0.2rem;
   /* font-size: 1.45rem; */
 }
 
 .keybox #endKeyIcon {
   display: block;
   margin: auto;
-  margin-top: .2rem;
+  margin-top: 0.2rem;
   /* font-size: 1.45rem; */
-  color: #D12300;
+  color: #d12300;
 }
 
 table {
@@ -48,7 +48,7 @@ table {
 
 /* types */
 .wall {
-  background-color: #36496A;
+  background-color: #36496a;
 }
 .start {
   background-color: white;
@@ -63,7 +63,7 @@ table {
   /* background-color: #00B383;
   background-color: #00B0E6; */
 }
-.start.visited{
+.start.visited {
   background-color: #8fb8d7;
   /* background-color: #00B383;
   background-color: #00B0E6; */
@@ -73,21 +73,21 @@ table {
   /* background-color: #00B383;
   background-color: #00B0E6; */
 }
-.wall.visited{
-  background-color: #36496A;
+.wall.visited {
+  background-color: #36496a;
 }
 
 .shortestPath {
-  background-color: #FFE017;
+  background-color: #ffe017;
 }
 .start.shortestPath {
-  background-color: #FFE017;
+  background-color: #ffe017;
 }
-.end.shortestPath{
-  background-color: #FFE017;
+.end.shortestPath {
+  background-color: #ffe017;
 }
 .wall.shortestPath {
-  background-color: #36496A;
+  background-color: #36496a;
 }
 
 /* GridKey Component */
@@ -113,11 +113,11 @@ table {
 }
 
 #playAlgo {
-  color: #36496A;
+  color: #36496a;
   margin: 1rem;
 }
 #playAlgo:hover {
-  color: #3C7AA9;
+  color: #3c7aa9;
 }
 
 .controls {
@@ -125,8 +125,3 @@ table {
   justify-content: center;
   align-items: center;
 }
-
-
-
-
-

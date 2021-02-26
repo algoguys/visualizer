@@ -5,12 +5,13 @@ import { updateStatus } from '../store/grid'
 import { type } from "jquery";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import DepthFirstSearch from '../algorithms/depthFirst'
 
 
 const Controls = (props) => {
 
   const grid = useSelector(state => state.grid)
-  const depthFirst = dfsTraversal(grid)
+  const depthFirstSearch = new DepthFirstSearch(grid)
 
   const updateCell = useDispatch()
   //?! tie speed into state
@@ -32,7 +33,7 @@ const Controls = (props) => {
         })
 
 
-        const dfsResults = depthFirst(grid.start, grid.end)
+        const dfsResults = depthFirstSearch.run()
         console.log('results', dfsResults)
 
 

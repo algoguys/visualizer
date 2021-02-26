@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { makeGrid } from '../store/grid'
 import Row from "./Row"
+import { DepthFirstSearch } from '../algorithms/depthFirst'
+
 
 const App = () => {
 
+
   const [width, setWidth] = useState(Math.floor(document.getElementById('main').offsetWidth/25));
 
-  console.log(width)
-  const [height, setHeight] = useState(Math.floor((window.innerHeight-200)/25));
+  const [height, setHeight] = useState(Math.floor((window.innerHeight-275)/25));
 
   const grid = useSelector(state => state.grid)
 

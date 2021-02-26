@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { updateType } from '../store/grid'
 import { setTrue, setFalse} from '../store/drawing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronRight, faMapMarker} from '@fortawesome/free-solid-svg-icons'
+import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg-icons'
 
 
 const Row = (props) => {
@@ -62,7 +62,7 @@ const Row = (props) => {
         >
           {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
 
-          {grid[cellId].type === "end" && <FontAwesomeIcon id="endNodeIcon" icon={faMapMarker} />}
+          {grid[cellId].type === "end" && <FontAwesomeIcon id="endNodeIcon" icon={faTimes} />}
 
           </td>
           }))
