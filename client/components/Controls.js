@@ -4,7 +4,7 @@ import { updateStatus } from '../store/grid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
-import { setTrue, setFalse } from '../store/running'
+import { setRunningTrue, setRunningFalse } from '../store/running'
 
 
 const Controls = (props) => {
@@ -12,11 +12,15 @@ const Controls = (props) => {
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
 
+  const state = useSelector(state => state)
+
   const depthFirstSearch = new DepthFirstSearch(grid)
 
   const updateCell = useDispatch()
-  const setRunningTrue = useDispatch()
-  const setRunningFalse = useDispatch()
+  const dispatchRunningTrue = useDispatch()
+  const dispatchRunningFalse = useDispatch()
+
+  console.log(state)
 
   console.log('isRunning', running.isRunning)
 
@@ -28,7 +32,7 @@ const Controls = (props) => {
 
 
     if (running.isRunning === false) {
-      setRunningTrue(setTrue())
+      dispatchRunningTrue(setRunningTrue())
 
       console.log('calling DFS Traversal!')
 
@@ -53,7 +57,7 @@ const Controls = (props) => {
               //console.log('visited', nodeId)
               updateCell(updateStatus(nodeId, 'visited'))
               //console.log(nodeId, 'type updated to', grid[nodeId].type)
-              if(idx === dfsResults.shortestPath.length - 1 && dfsResults.shortestPath.length === 0) setRunningFalse(setFalse())
+              if(idx === dfsResults.shortestPath.length - 1 && dfsResults.shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
             }, idx * speed) //?! update time to tie to speed var on state
 
             //idx 0 = 0 timeout
@@ -79,7 +83,7 @@ const Controls = (props) => {
                 console.log('dfsResults', dfsResults)
 
                 //console.log(nodeId, 'type updated to', grid[nodeId].type)
-                if(idx === dfsResults.shortestPath.length - 1) setRunningFalse(setFalse())
+                if(idx === dfsResults.shortestPath.length - 1) dispatchRunningFalse(setRunningFalse())
 
               }, idx * speed) //?! update time to tie to speed var on state
             })

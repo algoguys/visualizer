@@ -1,7 +1,7 @@
 import React, { useState}from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateType } from '../store/grid'
-import { setTrue, setFalse} from '../store/drawing'
+import { setDrawingTrue, setDrawingFalse} from '../store/drawing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg-icons'
 
@@ -10,8 +10,8 @@ const Row = (props) => {
   const drawing = useSelector(state => state.isDrawing)
   const grid = useSelector(state => state.grid)
   const updateCell = useDispatch()
-  const setDrawingTrue = useDispatch()
-  const setDrawingFalse = useDispatch()
+  const dispatchDrawingTrue = useDispatch()
+  const dispatchDrawingFalse = useDispatch()
 
     return (
       <tr>
@@ -46,7 +46,7 @@ const Row = (props) => {
 
           }}
           onMouseDown={() => {
-            setDrawingTrue(setTrue());
+            dispatchDrawingTrue(setDrawingTrue());
           }}
           onMouseOver={() => {
             if(drawing.isDrawing){
@@ -57,7 +57,7 @@ const Row = (props) => {
             }
           }}
           onMouseUp={() => {
-            setDrawingFalse(setFalse())
+            dispatchDrawingFalse(setDrawingFalse())
           }}
         >
           {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
