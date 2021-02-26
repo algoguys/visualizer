@@ -1,73 +1,101 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import dfsTraversal from '../algorithms/depthFirst'
 import { updateStatus } from '../store/grid'
-import { type } from "jquery";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import DepthFirstSearch from '../algorithms/depthFirst'
+import { setRunningTrue, setRunningFalse } from '../store/running'
+
 
 const Controls = (props) => {
 
+  const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
-  const depthFirst = dfsTraversal(grid)
+
+  const depthFirstSearch = new DepthFirstSearch(grid)
 
   const updateCell = useDispatch()
-  //?! tie speed into state
-  const speed = 40;
+  const dispatchRunningTrue = useDispatch()
+  const dispatchRunningFalse = useDispatch()
 
-  return (
-    <button onClick ={() => {
+  //?! tie speed into state
+  const speed = 10;
+
+  const handleRun = () => {
+
+
+    if (running.isRunning === false) {
+      dispatchRunningTrue(setRunningTrue())
+
       console.log('calling DFS Traversal!')
 
-      //sorted array of properties in grid that correspond to node ids
-      let keys = Object.keys(grid).sort((a, b) => a - b)
+          //sorted array of properties in grid that correspond to node ids
+          let keys = Object.keys(grid).sort((a, b) => a - b)
 
-      //loops through keys to update status on each node before executing search
-      keys.forEach((nodeId, idx) => {
-        if(idx < keys.length - 2) {
-          updateCell(updateStatus(nodeId, 'unvisited'))
-        }
-      })
-
-
-      const dfsResults = depthFirst(grid.start, grid.end)
-      console.log('results', dfsResults)
+          //loops through keys to update status on each node before executing search
+          keys.forEach((nodeId, idx) => {
+            if(idx < keys.length - 2) {
+              updateCell(updateStatus(nodeId, 'unvisited'))
+            }
+          })
 
 
-      // Use setTimeout to
-      dfsResults.visited.forEach((nodeId, idx) => {
-        setTimeout(() => {
-          //console.log('visited', nodeId)
-          updateCell(updateStatus(nodeId, 'visited'))
-          //console.log(nodeId, 'type updated to', grid[nodeId].type)
-        }, idx * speed) //?! update time to tie to speed var on state
+          const dfsResults = depthFirstSearch.run()
+          console.log('results', dfsResults)
 
-        //idx 0 = 0 timeout
-        //idx 1 = 500 timeout
-        //idx 2 = 1000 timeout
-        //...
-        //idx 10 = 5000 timeout
-      })
 
-      //?! I don't like the solution below, it feels clunky.  I'd rather use async/await or promises
+          // Use setTimeout to
+          dfsResults.visited.forEach((nodeId, idx) => {
+            setTimeout(() => {
+              //console.log('visited', nodeId)
+              updateCell(updateStatus(nodeId, 'visited'))
+              //console.log(nodeId, 'type updated to', grid[nodeId].type)
+              if(idx === dfsResults.shortestPath.length - 1 && dfsResults.shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
+            }, idx * speed) //?! update time to tie to speed var on state
 
-      //?! we need to add a var for isRunning on state to ensure we can only run the algo if it's not already being run.
+            //idx 0 = 0 timeout
+            //idx 1 = 500 timeout
+            //idx 2 = 1000 timeout
+            //...
+            //idx 10 = 5000 timeout
+          })
 
-      //?! we need a way to clear the board of visited nodes before we start an algorithm for the second time
+          //?! I don't like the solution below, it feels clunky.  I'd rather use async/await or promises
 
-      //outer timeout delays call until after visited nodes have been traversed
-      setTimeout( () => {
-        dfsResults.shortestPath.forEach((nodeId, idx) => {
-          setTimeout(() => { // controls timeout for shortestPath
-            //console.log('shortestPath', nodeId)
-            updateCell(updateStatus(nodeId, 'shortestPath'))
-            //console.log(nodeId, 'type updated to', grid[nodeId].type)
-          }, idx * speed) //?! update time to tie to speed var on state
-        })
+          //?! we need to add a var for isRunning on state to ensure we can only run the algo if it's not already being run.
 
-      }, dfsResults.visited.length * speed )
+          //?! we need a way to clear the board of visited nodes before we start an algorithm for the second time
 
-      //console.log('start and end', grid.start, grid.end)
-      //depthFirst(grid.start, grid.end);
-    }}>Run</button>
+          //outer timeout delays call until after visited nodes have been traversed
+          setTimeout( () => {
+            dfsResults.shortestPath.forEach((nodeId, idx) => {
+              setTimeout(() => { // controls timeout for shortestPath
+                //console.log('shortestPath', nodeId)
+                updateCell(updateStatus(nodeId, 'shortestPath'))
+
+                console.log('dfsResults', dfsResults)
+
+                //console.log(nodeId, 'type updated to', grid[nodeId].type)
+                if(idx === dfsResults.shortestPath.length - 1) dispatchRunningFalse(setRunningFalse())
+
+              }, idx * speed) //?! update time to tie to speed var on state
+            })
+
+          }, dfsResults.visited.length * speed )
+
+          //console.log('start and end', grid.start, grid.end)
+          //depthFirst(grid.start, grid.end);
+    } else {
+      console.log('already running')
+    }
+  }
+
+  return (
+    <div className="controls">
+      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
+
+    </div>
+
   )
 }
 

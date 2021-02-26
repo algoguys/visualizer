@@ -9,6 +9,9 @@
     "build": "webpack -p"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
     "babel-plugin-add-module-exports": "^0.2.1",

@@ -1,14 +1,18 @@
 import React, { useState}from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateType } from '../store/grid'
-import { setTrue, setFalse} from '../store/drawing'
+import { setDrawingTrue, setDrawingFalse} from '../store/drawing'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg-icons'
+
 
 const Row = (props) => {
-  const isDrawing = useSelector(state => state.isDrawing)
+  const drawing = useSelector(state => state.isDrawing)
+  const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
   const updateCell = useDispatch()
-  const setDrawingTrue = useDispatch()
-  const setDrawingFalse = useDispatch()
+  const dispatchDrawingTrue = useDispatch()
+  const dispatchDrawingFalse = useDispatch()
 
     return (
       <tr>
@@ -18,7 +22,9 @@ const Row = (props) => {
             const cellId = (props.rowId * props.widthArr.length) + idx
             // assign class based on cell type
             let typeClass = "normal"
-            if (grid[cellId].type === 'start') typeClass = "start"
+            if (grid[cellId].type === 'start') {
+              typeClass = "start"
+            }
             else if (grid[cellId].type === 'end') typeClass = "end"
             else if (grid[cellId].type === 'normal') typeClass = "normal"
             else if (grid[cellId].type === 'wall') typeClass = "wall"
@@ -31,20 +37,24 @@ const Row = (props) => {
 
           return <td key={idx} cellid={cellId} className={`${typeClass} ${visitedClass}`}
           onClick={() => {
-            let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
-            if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
-              updateCell(updateType(cellId, newType))
-            }
+            if (!running.isRunning) {
+              let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
+              if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
+                updateCell(updateType(cellId, newType))
+              }
 
-            //?! delete me eventually
-            console.log(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)
+              //?! delete me eventually
+              console.log(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)
+            }
 
           }}
           onMouseDown={() => {
-            setDrawingTrue(setTrue());
+            if (!running.isRunning && !drawing.isDrawing) {
+              dispatchDrawingTrue(setDrawingTrue());
+            }
           }}
           onMouseOver={() => {
-            if(isDrawing.isDrawing){
+            if(drawing.isDrawing){
               let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
               if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
                 updateCell(updateType(cellId, newType))
@@ -52,9 +62,16 @@ const Row = (props) => {
             }
           }}
           onMouseUp={() => {
-            setDrawingFalse(setFalse())
+            if (drawing.isDrawing) {
+              dispatchDrawingFalse(setDrawingFalse())
+            }
           }}
-          ></td>
+        >
+          {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
+
+          {grid[cellId].type === "end" && <FontAwesomeIcon id="endNodeIcon" icon={faTimes} />}
+
+          </td>
           }))
         }
       </tr>

@@ -1,3 +1,5 @@
+import Algorithm from './index'
+
 // from the startNode, iterate/recurse thru each node it may be connected to
 // mark each node we visit (table to memoize or something else???)
 // stop if we hit the endNode (base case, return the path to get to endNode)
@@ -6,28 +8,33 @@
 //const grid = makeAdjList(4, 4) //? importing makeAdjList for testing purposes, later add back to Grid component
 //console.log(grid)
 
-const dfsTraversal = (grid) => {
+export default class DepthFirstSearch extends Algorithm {
+  constructor(grid) {
+    super(grid)
+  }
 
-  return function findPath (startId, endId, visited = []) {
-    visited.push(startId)
+  run(startNode = this.startId, visited = []) {
+    const grid = this.grid
 
-    //console.log('are we at endNode?', grid[startId] === grid[endId])
+    visited.push(startNode)
 
-    if (startId === endId) {
+    //console.log('are we at endNode?', grid[startNode] === grid[endNode])
+
+    if (startNode === this.endId) {
       //console.log('found end node')
-      return {visited, shortestPath: [startId]} // base case, return array with current node id
+      return {visited, shortestPath: [startNode]} // base case, return array with current node id
     } else {
-      const neighbors = grid[startId].neighbors
+      const neighbors = grid[startNode].neighbors
       //console.log('neighbors', neighbors)
       for (let i = 0; i < neighbors.length; i++) {
         const neighborId = neighbors[i]
         if (!visited.includes(neighborId) && grid[neighborId].type !== 'wall') {
           //console.log(`next node: grid[${neighborId}]`)
-          const response = findPath(neighborId, endId, visited)
+          const response = this.run(neighborId, visited)
           //console.log('response', response)
           // if response is an array, add current node id to the front of the array
-          if (response && response.shortestPath[response.shortestPath.length - 1] === endId) {
-            response.shortestPath.unshift(startId)
+          if (response && response.shortestPath[response.shortestPath.length - 1] === this.endId) {
+            response.shortestPath.unshift(startNode)
             return response
           }
         }
@@ -36,7 +43,6 @@ const dfsTraversal = (grid) => {
       return { visited: visited, shortestPath: [] }
     }
   }
-  //return findPath(grid.start, grid.end);
-}
 
-export default dfsTraversal
+
+}
