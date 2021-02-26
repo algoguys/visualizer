@@ -8,6 +8,7 @@ import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg
 
 const Row = (props) => {
   const drawing = useSelector(state => state.isDrawing)
+  const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
   const updateCell = useDispatch()
   const dispatchDrawingTrue = useDispatch()
@@ -36,17 +37,21 @@ const Row = (props) => {
 
           return <td key={idx} cellid={cellId} className={`${typeClass} ${visitedClass}`}
           onClick={() => {
-            let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
-            if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
-              updateCell(updateType(cellId, newType))
-            }
+            if (!running.isRunning) {
+              let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
+              if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
+                updateCell(updateType(cellId, newType))
+              }
 
-            //?! delete me eventually
-            console.log(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)
+              //?! delete me eventually
+              console.log(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)
+            }
 
           }}
           onMouseDown={() => {
-            dispatchDrawingTrue(setDrawingTrue());
+            if (!running.isRunning && !drawing.isDrawing) {
+              dispatchDrawingTrue(setDrawingTrue());
+            }
           }}
           onMouseOver={() => {
             if(drawing.isDrawing){
@@ -57,7 +62,9 @@ const Row = (props) => {
             }
           }}
           onMouseUp={() => {
-            dispatchDrawingFalse(setDrawingFalse())
+            if (drawing.isDrawing) {
+              dispatchDrawingFalse(setDrawingFalse())
+            }
           }}
         >
           {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}

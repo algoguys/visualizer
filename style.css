@@ -113,10 +113,22 @@ table {
 }
 
 #playAlgo {
-  color: #36496a;
   margin: 1rem;
 }
-#playAlgo:hover {
+
+.unclickable-control {
+  color: grey;
+}
+
+.unclickable-control:hover {
+  color: grey;
+}
+
+.clickable-control {
+  color: #36496a;
+}
+
+.clickable-control:hover {
   color: #3c7aa9;
 }
 

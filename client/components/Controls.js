@@ -12,18 +12,11 @@ const Controls = (props) => {
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
 
-  const state = useSelector(state => state)
-
   const depthFirstSearch = new DepthFirstSearch(grid)
 
   const updateCell = useDispatch()
   const dispatchRunningTrue = useDispatch()
   const dispatchRunningFalse = useDispatch()
-
-  console.log(state)
-
-  console.log('isRunning', running.isRunning)
-
 
   //?! tie speed into state
   const speed = 10;
@@ -99,7 +92,7 @@ const Controls = (props) => {
 
   return (
     <div className="controls">
-      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}}/>
+      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
 
     </div>
 
