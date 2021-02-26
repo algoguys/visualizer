@@ -7,7 +7,7 @@ import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg
 
 
 const Row = (props) => {
-  const isDrawing = useSelector(state => state.isDrawing)
+  const drawing = useSelector(state => state.isDrawing)
   const grid = useSelector(state => state.grid)
   const updateCell = useDispatch()
   const setDrawingTrue = useDispatch()
@@ -49,7 +49,7 @@ const Row = (props) => {
             setDrawingTrue(setTrue());
           }}
           onMouseOver={() => {
-            if(isDrawing.isDrawing){
+            if(drawing.isDrawing){
               let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
               if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
                 updateCell(updateType(cellId, newType))
