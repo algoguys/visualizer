@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateStatus } from '../store/grid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
+import BreadthFirstSearch from '../algorithms/breadthFirst'
 import { setRunningTrue, setRunningFalse } from '../store/running'
 
 
@@ -12,15 +13,15 @@ const Controls = (props) => {
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
 
-  const depthFirstSearch = new DepthFirstSearch(grid)
+  const [speed, setSpeed] = useState(10)
+  //const [selectedAlgorithm, setSelectedAlgorithm] = useState(() => new DepthFirstSearch(grid))
+
+  // const findDestination = new DepthFirstSearch(grid)
+  const findDestination = new BreadthFirstSearch(grid)
 
   const updateCell = useDispatch()
   const dispatchRunningTrue = useDispatch()
   const dispatchRunningFalse = useDispatch()
-
-  //?! tie speed into state
-  const speed = 10;
-
   const handleRun = () => {
 
 
@@ -40,17 +41,17 @@ const Controls = (props) => {
           })
 
 
-          const dfsResults = depthFirstSearch.run()
-          console.log('results', dfsResults)
+          const results = findDestination.run()
+          console.log('results', results)
 
 
           // Use setTimeout to
-          dfsResults.visited.forEach((nodeId, idx) => {
+          results.visited.forEach((nodeId, idx) => {
             setTimeout(() => {
               //console.log('visited', nodeId)
               updateCell(updateStatus(nodeId, 'visited'))
               //console.log(nodeId, 'type updated to', grid[nodeId].type)
-              if(idx === dfsResults.shortestPath.length - 1 && dfsResults.shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
+              if(idx === results.visited.length - 1 && results.shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
             }, idx * speed) //?! update time to tie to speed var on state
 
             //idx 0 = 0 timeout
@@ -68,20 +69,20 @@ const Controls = (props) => {
 
           //outer timeout delays call until after visited nodes have been traversed
           setTimeout( () => {
-            dfsResults.shortestPath.forEach((nodeId, idx) => {
+            results.shortestPath.forEach((nodeId, idx) => {
               setTimeout(() => { // controls timeout for shortestPath
                 //console.log('shortestPath', nodeId)
                 updateCell(updateStatus(nodeId, 'shortestPath'))
 
-                console.log('dfsResults', dfsResults)
+                console.log('results', results)
 
                 //console.log(nodeId, 'type updated to', grid[nodeId].type)
-                if(idx === dfsResults.shortestPath.length - 1) dispatchRunningFalse(setRunningFalse())
+                if(idx === results.shortestPath.length - 1) dispatchRunningFalse(setRunningFalse())
 
               }, idx * speed) //?! update time to tie to speed var on state
             })
 
-          }, dfsResults.visited.length * speed )
+          }, results.visited.length * speed )
 
           //console.log('start and end', grid.start, grid.end)
           //depthFirst(grid.start, grid.end);
