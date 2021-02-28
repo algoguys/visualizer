@@ -13,7 +13,7 @@ const Controls = (props) => {
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
 
-  const [speed, setSpeed] = useState(10)
+  const [speed, setSpeed] = useState(20)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('BreadthFirstSearch')
 
   // const findDestination = new DepthFirstSearch(grid)
@@ -62,6 +62,7 @@ const Controls = (props) => {
 
           // Use setTimeout to
           results.visited.forEach((nodeId, idx) => {
+            console.log(speed)
             setTimeout(() => {
               //console.log('visited', nodeId)
               updateCell(updateStatus(nodeId, 'visited'))
@@ -117,12 +118,25 @@ const Controls = (props) => {
 
       {/* toggle selectedAlgorithm */}
       <label>
-          Select Pathfinding Algorithm:<br/>
-          <select value={selectedAlgorithm} onChange={(e) => handleChangeAlgorithm(e)}>
-            <option value="DepthFirstSearch">Depth First Search</option>
-            <option value="BreadthFirstSearch">Breadth First Search</option>
-          </select>
-        </label>
+        Select Pathfinding Algorithm:<br/>
+        <select value={selectedAlgorithm} onChange={(e) => handleChangeAlgorithm(e)}>
+          <option value="DepthFirstSearch">Depth First Search</option>
+          <option value="BreadthFirstSearch">Breadth First Search</option>
+        </select>
+      </label>
+
+      {/* toggle speed */}
+      <label>
+        Speed:<br/>
+        <select value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))}>
+          <option value="1">Really Fast</option>
+          <option value="20">Fast</option>
+          <option value="75">Normal</option>
+          <option value="150">Slow</option>
+          <option value="250">Really Slow</option>
+
+        </select>
+      </label>
     </div>
 
   )
