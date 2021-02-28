@@ -70,6 +70,7 @@ const Row = (props) => {
           {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
 
           {grid[cellId].type === "end" && <FontAwesomeIcon id="endNodeIcon" icon={faTimes} />}
+          {cellId}
           </td>
           }))
         }

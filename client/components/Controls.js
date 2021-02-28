@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateStatus, makeGrid } from '../store/grid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
 import BreadthFirstSearch from '../algorithms/breadthFirst'
 import { setRunningTrue, setRunningFalse } from '../store/running'
@@ -15,6 +15,9 @@ const Controls = (props) => {
 
   const [speed, setSpeed] = useState(20)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('BreadthFirstSearch')
+  const [isPaused, setIsPaused] = useState(false)
+  const [lastProcessedVisited, setLastProcessedVisited] = useState({})
+  const [lastProcessedShortestPath, setLastProcessedShortestPath] = useState({})
 
   // const findDestination = new DepthFirstSearch(grid)
   let findDestination = new BreadthFirstSearch(grid)
@@ -34,6 +37,8 @@ const Controls = (props) => {
     }
 
   }, [selectedAlgorithm]); // Only re-run the effect if selectedAlgorithm changes
+
+
 
 
   const updateCell = useDispatch();
@@ -62,25 +67,26 @@ const Controls = (props) => {
       clearVisitedNodes();
 
       const results = findDestination.run()
-      console.log('results', results)
+      // console.log('results', results)
 
 
       // Use setTimeout to
       results.visited.forEach((nodeId, idx) => {
-        console.log(speed)
         setTimeout(() => {
           //console.log('visited', nodeId)
           updateCell(updateStatus(nodeId, 'visited'))
           //console.log(nodeId, 'type updated to', grid[nodeId].type)
           if(idx === results.visited.length - 1 && results.shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
+          setLastProcessedVisited({idx, nodeId})
         }, idx * speed) //?! update time to tie to speed var on state
-
+        //console.log('timeout', timeout)
         //idx 0 = 0 timeout
         //idx 1 = 500 timeout
         //idx 2 = 1000 timeout
         //...
         //idx 10 = 5000 timeout
       })
+
 
       //?! I don't like the solution below, it feels clunky.  I'd rather use async/await or promises
 
@@ -91,25 +97,43 @@ const Controls = (props) => {
       //outer timeout delays call until after visited nodes have been traversed
       setTimeout( () => {
         results.shortestPath.forEach((nodeId, idx) => {
-          setTimeout(() => { // controls timeout for shortestPath
+           setTimeout(() => { // controls timeout for shortestPath
             //console.log('shortestPath', nodeId)
             updateCell(updateStatus(nodeId, 'shortestPath'))
 
-            console.log('results', results)
+            // console.log('results', results)
 
             //console.log(nodeId, 'type updated to', grid[nodeId].type)
             if(idx === results.shortestPath.length - 1) dispatchRunningFalse(setRunningFalse())
+            setLastProcessedShortestPath({idx, nodeId})
 
           }, idx * speed) //?! update time to tie to speed var on state
         })
 
       }, results.visited.length * speed )
 
+
       //console.log('start and end', grid.start, grid.end)
       //depthFirst(grid.start, grid.end);
     } else {
       console.log('already running')
     }
+
+  }
+
+  const handlePause = () => {
+    setIsPaused(true)
+
+    let killId = setTimeout(function() {
+      for (let i = killId; i > 0; i--) {
+        clearTimeout(i)
+      }
+    }, 0);
+
+    console.log('visited processed', lastProcessedVisited)
+    console.log('shortestPath processed', lastProcessedShortestPath)
+
+    //console.log('the algorithm ', isPaused)
   }
 
   const handleChangeAlgorithm = (event) => {
@@ -117,9 +141,15 @@ const Controls = (props) => {
     setSelectedAlgorithm(event.target.value);
   }
 
+  let playAndPause = running.isRunning && !isPaused
+    //Pause button
+    ? <FontAwesomeIcon id="pauseAlgo" icon={faPause} size="4x" onClick ={() => {handlePause()}} className="clickable-control" />
+    //Play button
+    : <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className="clickable-control" />
+
   return (
     <div className="controls">
-      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
+      {playAndPause}
 
       {/* toggle selectedAlgorithm */}
       <label>
