@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateStatus } from '../store/grid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,17 +14,32 @@ const Controls = (props) => {
   const grid = useSelector(state => state.grid)
 
   const [speed, setSpeed] = useState(10)
-  //const [selectedAlgorithm, setSelectedAlgorithm] = useState(() => new DepthFirstSearch(grid))
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState('BreadthFirstSearch')
 
   // const findDestination = new DepthFirstSearch(grid)
-  const findDestination = new BreadthFirstSearch(grid)
+  let findDestination = new BreadthFirstSearch(grid)
+
+  // update findDestination if selectedAlgorithm changes
+  useEffect(() => {
+    document.title = `Visualize ${selectedAlgorithm} algorithm`;
+    switch (selectedAlgorithm) {
+      case 'DepthFirstSearch':
+        findDestination = new DepthFirstSearch(grid)
+        break;
+      case 'BreadthFirstSearch':
+        findDestination = new BreadthFirstSearch(grid)
+        break;
+      default:
+        break;
+    }
+
+  }, [selectedAlgorithm]); // Only re-run the effect if selectedAlgorithm changes
+
 
   const updateCell = useDispatch()
   const dispatchRunningTrue = useDispatch()
   const dispatchRunningFalse = useDispatch()
   const handleRun = () => {
-
-
     if (running.isRunning === false) {
       dispatchRunningTrue(setRunningTrue())
 
@@ -91,10 +106,23 @@ const Controls = (props) => {
     }
   }
 
+  const handleChangeAlgorithm = (event) => {
+    // update selectedAlgorithm state to current selection
+    setSelectedAlgorithm(event.target.value);
+  }
+
   return (
     <div className="controls">
       <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
 
+      {/* toggle selectedAlgorithm */}
+      <label>
+          Select Pathfinding Algorithm:<br/>
+          <select value={selectedAlgorithm} onChange={(e) => handleChangeAlgorithm(e)}>
+            <option value="DepthFirstSearch">Depth First Search</option>
+            <option value="BreadthFirstSearch">Breadth First Search</option>
+          </select>
+        </label>
     </div>
 
   )
