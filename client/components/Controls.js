@@ -15,25 +15,38 @@ const Controls = (props) => {
 
   const [speed, setSpeed] = useState(20)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('BreadthFirstSearch')
+  const [results, setResults] = useState({})
+  const [destinationFinder, setDestinationFinder] = useState(-1)
 
-  // initializes findDestination
-  let findDestination = new BreadthFirstSearch(grid)
-
-  // update findDestination based on selected algorithm
+  // update destination finder
   useEffect(() => {
-    document.title = `Visualize ${selectedAlgorithm} algorithm`;
-    switch (selectedAlgorithm) {
-      case 'DepthFirstSearch':
-        findDestination = new DepthFirstSearch(grid)
-        break;
-      case 'BreadthFirstSearch':
-        findDestination = new BreadthFirstSearch(grid)
-        break;
-      default:
-        break;
+    // console.log('set destination finder effect running')
+    if(grid[0]) {
+      switch (selectedAlgorithm) {
+        case 'DepthFirstSearch':
+          setDestinationFinder(new DepthFirstSearch(grid))
+          break;
+        case 'BreadthFirstSearch':
+          setDestinationFinder(new BreadthFirstSearch(grid))
+          break;
+        default:
+          break;
+      }
+      // console.log('destinationFinder updated', destinationFinder)
     }
+  }, [grid, selectedAlgorithm])
 
-  });
+  // update results
+  useEffect(() => {
+    // console.log('set results effect running')
+    if(destinationFinder !== -1) {
+      setResults({...destinationFinder.run()})
+      // console.log('results updated', results)
+    }
+  }, [destinationFinder])
+
+
+
 
 
   const updateCell = useDispatch();
@@ -57,17 +70,14 @@ const Controls = (props) => {
     if (running.isRunning === false) {
       dispatchRunningTrue(setRunningTrue())
 
-      console.log('calling DFS Traversal!')
-
       clearVisitedNodes();
 
-      const results = findDestination.run()
+      //const results = findDestination.run()
       console.log('results', results)
 
 
       // Use setTimeout to
       results.visited.forEach((nodeId, idx) => {
-        console.log(speed)
         setTimeout(() => {
           //console.log('visited', nodeId)
           updateCell(updateStatus(nodeId, 'visited'))
@@ -95,7 +105,7 @@ const Controls = (props) => {
             //console.log('shortestPath', nodeId)
             updateCell(updateStatus(nodeId, 'shortestPath'))
 
-            console.log('results', results)
+            // console.log('results', results)
 
             //console.log(nodeId, 'type updated to', grid[nodeId].type)
             if(idx === results.shortestPath.length - 1) dispatchRunningFalse(setRunningFalse())
