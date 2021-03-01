@@ -16,10 +16,10 @@ const Controls = (props) => {
   const [speed, setSpeed] = useState(20)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('BreadthFirstSearch')
 
-  // const findDestination = new DepthFirstSearch(grid)
+  // initializes findDestination
   let findDestination = new BreadthFirstSearch(grid)
 
-  // update findDestination if selectedAlgorithm changes
+  // update findDestination based on selected algorithm
   useEffect(() => {
     document.title = `Visualize ${selectedAlgorithm} algorithm`;
     switch (selectedAlgorithm) {
@@ -33,7 +33,7 @@ const Controls = (props) => {
         break;
     }
 
-  }, [selectedAlgorithm]); // Only re-run the effect if selectedAlgorithm changes
+  });
 
 
   const updateCell = useDispatch();
