@@ -9,20 +9,29 @@ import { setRunningTrue, setRunningFalse } from '../store/running'
 
 
 const Controls = (props) => {
-
+  // ********* global state ************** //
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
 
+  // ********** local state ************** //
+  // currently selected speed
   const [speed, setSpeed] = useState(40)
+  // currently select algorithm
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('BreadthFirstSearch')
+  // object returned when calling run method of currently selected alogrithm
+  // object contains the visited and shortestPath props
   const [results, setResults] = useState({})
+  // instance of algorithm class currently selected
   const [destinationFinder, setDestinationFinder] = useState(-1)
+  // tracks the last element from visited (local state) and shortestPath (local state) that was processed and rendered to the UI
   const [lastProcessedVisited, setLastProcessedVisited] = useState(-1)
   const [lastProcessedShortestPath, setLastProcessedShortestPath] = useState(-1)
+  // tracks last timeout id to be erased
   const [lastTimeoutId, setLastTimeoutId] = useState(0)
   // visited and shortestPath are used to track results rendered to the UI
   const [visited, setVisited] = useState([])
   const [shortestPath, setShortestPath] = useState([])
+
 
   // update destination finder
   useEffect(() => {

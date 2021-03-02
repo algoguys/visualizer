@@ -21,7 +21,6 @@ export const setDrawingFalse = () => ({type: SET_DRAWING_FALSE})
 export default function(state = drawing, action) {
   switch (action.type) {
     case SET_DRAWING_TRUE:
-      console.log("state before toggle", state.isDrawing)
       return {isDrawing: true}
     case SET_DRAWING_FALSE:
       return {isDrawing: false}
