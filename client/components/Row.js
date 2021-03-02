@@ -38,11 +38,6 @@ const Row = (props) => {
           return <td key={idx} cellid={cellId} className={`${typeClass} ${visitedClass}`}
           onClick={() => {
             if (!running.isRunning) {
-              let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
-              if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
-                updateCell(updateType(cellId, newType))
-              }
-
               //?! delete me eventually
               console.log(`cell: ${grid[cellId].id}\nneighbors: ${grid[cellId].neighbors}\ntype: ${grid[cellId].type}`)
             }
@@ -51,6 +46,10 @@ const Row = (props) => {
           onMouseDown={() => {
             if (!running.isRunning && !drawing.isDrawing) {
               dispatchDrawingTrue(setDrawingTrue());
+              let newType = grid[cellId].type === 'wall' ? 'normal' : 'wall'
+              if(grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
+                updateCell(updateType(cellId, newType))
+              }
             }
           }}
           onMouseOver={() => {
@@ -62,9 +61,7 @@ const Row = (props) => {
             }
           }}
           onMouseUp={() => {
-            if (drawing.isDrawing) {
-              dispatchDrawingFalse(setDrawingFalse())
-            }
+            if (drawing.isDrawing) dispatchDrawingFalse(setDrawingFalse())
           }}
         >
           {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
