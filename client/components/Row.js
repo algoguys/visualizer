@@ -2,24 +2,33 @@ import React, { useState }from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateType, updateStart, updateEnd } from '../store/grid'
 import { setDrawingTrue, setDrawingFalse} from '../store/drawing'
+// { setDraggingEndTrue, setDraggingEndFalse, setDraggingStartTrue, setDraggingStartFalse, updatePreviousCell } from '../store'
+import { setDraggingEndTrue, setDraggingEndFalse } from '../store/draggingEnd'
+import { setDraggingStartTrue, setDraggingStartFalse } from '../store/draggingStart'
+import { updatePreviousCell } from '../store/previousCellType'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg-icons'
 
 
 const Row = (props) => {
+  const grid = useSelector(state => state.grid)
   const drawing = useSelector(state => state.isDrawing)
   const running = useSelector(state => state.isRunning)
-  const grid = useSelector(state => state.grid)
+  const draggingStart = useSelector(state => state.isDraggingStart)
+  const draggingEnd = useSelector(state => state.isDraggingEnd)
+  const previousCell = useSelector(state => state.previousCellType)
 
-  // ?! make global state variables to enable dragging functionality
-  const [isDraggingStart, setIsDraggingStart] = useState(false)
-  const [isDraggingEnd, setIsDraggingEnd] = useState(false)
-  const [prevType, setPrevType] = useState('normal')
+  // ?! make these local state vars into global state variables to enable dragging functionality
+  // const [isDraggingStart, setIsDraggingStart] = useState(false)
+  // const [isDraggingEnd, setIsDraggingEnd] = useState(false)
+  // const [prevType, setPrevType] = useState('normal')
 
-  const updateCell = useDispatch()
-  const dispatchDrawingTrue = useDispatch()
-  const dispatchDrawingFalse = useDispatch()
   const updateGrid = useDispatch()
+  const updateCell = useDispatch()
+  const dispatchDrawing = useDispatch()
+  const dispatchDraggingStart = useDispatch()
+  const dispatchDraggingEnd = useDispatch()
+  const dispatchPreviousCell = useDispatch()
 
   const drawWall = (node) => {
     let newType = node.type === 'wall' ? 'normal' : 'wall'
@@ -51,49 +60,68 @@ const Row = (props) => {
             else if (grid[cellId].status === 'visited') visitedClass = "visited"
             else if (grid[cellId].status === 'shortestPath') visitedClass = "shortestPath"
 
-          return <td key={idx} cellid={cellId} className={`${typeClass} ${visitedClass}`}
-          onMouseDown={(e) => {
+          return <td key={idx} id={cellId} cellid={cellId} className={`${typeClass} ${visitedClass}`}
+          onMouseDown={() => {
             if (!running.isRunning && !drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
-              dispatchDrawingTrue(setDrawingTrue());
+              dispatchDrawing(setDrawingTrue());
               drawWall(grid[cellId])
             }
-            else if (!running.isRunning && !isDraggingStart && grid[cellId].type === 'start' ){
-              setIsDraggingStart(true)
+            else if (!running.isRunning && !draggingStart.isDraggingStart && grid[cellId].type === 'start' ){
+              dispatchDraggingStart(setDraggingStartTrue())
               console.log('start dragging the start')
             }
-            else if (!running.isRunning && !isDraggingEnd && grid[cellId].type === 'end'){
-              setIsDraggingEnd(true)
+            else if (!running.isRunning && !draggingEnd.isDraggingEnd && grid[cellId].type === 'end'){
+              dispatchDraggingEnd(setDraggingEndTrue())
               console.log('start dragging the end')
             }
           }}
-          onMouseOver={() => {
+          onMouseOver={(e) => {
+            //console.log('previous cell', previousCell)
             if(drawing.isDrawing){
               drawWall(grid[cellId])
             }
-            else if(isDraggingStart){
-              setPrevType(grid[cellId].type)
-              updateCell(updateType(cellId, 'start'))
+            else if(draggingStart.isDraggingStart){
+              if(grid[cellId].type !== 'end') {
+                //console.log('type on over', grid[cellId].type)
+                dispatchPreviousCell(updatePreviousCell(grid[cellId].type))
+                updateCell(updateType(cellId, 'start'))
+              } else {
+                console.log('cannot update the end cell')
+                // console.log('event', e.relatedTarget.id)
+                // let neighborId = e.relatedTarget.id
+                // console.log( 'neigbhor id', neighborId)
+                // //dispatchPreviousCell(updatePreviousCell(grid[neighborId].type))
+                // updateCell(updateType(cellId[neighborId], 'start'))
+              }
             }
-            else if(isDraggingEnd){
-              setPrevType(grid[cellId].type)
-              updateCell(updateType(cellId, 'end'))
+            else if(draggingEnd.isDraggingEnd){
+              if (grid[cellId].type !== 'start'){
+                dispatchPreviousCell(updatePreviousCell(grid[cellId].type))
+                updateCell(updateType(cellId, 'end'))
+              }
             }
           }}
-          onMouseOut={() => {
-            if(isDraggingStart) updateCell(updateType(cellId, prevType))
-            else if (isDraggingEnd) updateCell(updateType(cellId, prevType))
+          onMouseOut={(e) => {
+            if(draggingStart.isDraggingStart) {
+              if(grid[cellId].type !== 'end') {
+                updateCell(updateType(cellId, previousCell.type))
+              } else console.log('do nothing on end cell')
+            }
+            else if (draggingEnd.isDraggingEnd) {
+              if (grid[cellId].type !== 'start') updateCell(updateType(cellId, previousCell.type))
+            }
           }}
-          onMouseUp={() => {
-            if (drawing.isDrawing) dispatchDrawingFalse(setDrawingFalse())
-            else if (isDraggingStart) {
-              setIsDraggingStart(false)
+          onMouseUp={(e) => {
+            if (drawing.isDrawing) dispatchDrawing(setDrawingFalse())
+            else if (draggingStart.isDraggingStart) {
+              dispatchDraggingStart(setDraggingStartFalse())
               updateGrid(updateStart(cellId))
-              setPrevType('normal')
+              dispatchPreviousCell(updatePreviousCell('normal'))
             }
-            else if (isDraggingEnd) {
-              setIsDraggingEnd(false)
+            else if (draggingEnd.isDraggingEnd) {
+              dispatchDraggingEnd(setDraggingEndFalse())
               updateGrid(updateEnd(cellId))
-              setPrevType('normal')
+              dispatchPreviousCell(updatePreviousCell('normal'))
             }
           }}
 
