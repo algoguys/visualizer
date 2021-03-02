@@ -13,27 +13,76 @@ const Controls = (props) => {
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
 
-  const [speed, setSpeed] = useState(20)
+  const [speed, setSpeed] = useState(40)
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('BreadthFirstSearch')
+  const [results, setResults] = useState({})
+  const [destinationFinder, setDestinationFinder] = useState(-1)
+  const [lastProcessedVisited, setLastProcessedVisited] = useState(-1)
+  const [lastProcessedShortestPath, setLastProcessedShortestPath] = useState(-1)
+  const [lastTimeoutId, setLastTimeoutId] = useState(0)
+  // visited and shortestPath are used to track results rendered to the UI
+  const [visited, setVisited] = useState([])
+  const [shortestPath, setShortestPath] = useState([])
 
-  // const findDestination = new DepthFirstSearch(grid)
-  let findDestination = new BreadthFirstSearch(grid)
-
-  // update findDestination if selectedAlgorithm changes
+  // update destination finder
   useEffect(() => {
-    document.title = `Visualize ${selectedAlgorithm} algorithm`;
-    switch (selectedAlgorithm) {
-      case 'DepthFirstSearch':
-        findDestination = new DepthFirstSearch(grid)
-        break;
-      case 'BreadthFirstSearch':
-        findDestination = new BreadthFirstSearch(grid)
-        break;
-      default:
-        break;
+    // console.log('set destination finder effect running')
+    if(grid[0]) {
+      switch (selectedAlgorithm) {
+        case 'DepthFirstSearch':
+          setDestinationFinder(new DepthFirstSearch(grid))
+          break;
+        case 'BreadthFirstSearch':
+          setDestinationFinder(new BreadthFirstSearch(grid))
+          break;
+        default:
+          break;
+      }
+      // console.log('destinationFinder updated', destinationFinder)
     }
+  }, [grid, selectedAlgorithm])
 
-  }, [selectedAlgorithm]); // Only re-run the effect if selectedAlgorithm changes
+  // update results if destinationFinder changes
+  useEffect(() => {
+    // if desintationFinder has been initialized update results
+    if(destinationFinder !== -1) {
+      setResults({...destinationFinder.run()})
+    }
+  }, [destinationFinder])
+
+
+  // change rate at which each cell's status is changed and displayed to UI when speed changes
+  useEffect((arr) => {
+    // console.log('speed updated', speed, arr)
+
+    if(running.isRunning){
+      //destroy all previously created timeouts
+      let killTimeouts = setTimeout(function() {
+        for (let i = killTimeouts; i > lastTimeoutId; i--) {
+          clearTimeout(i)
+        }
+      }, 0);
+      setLastTimeoutId(killTimeouts)
+
+      //Re-initialized visualizeVisited or visualizeShortestPath based on the last processed timeout (local state)
+      if(lastProcessedVisited < visited.length-1) {
+        const remaining = visited.slice(lastProcessedVisited)
+        visualizeVisited(remaining)
+        setTimeout( () => {
+          visualizeShortestPath(results.shortestPath)
+        }, remaining.length * speed)
+      } else {
+        let remaining = []
+        if(results.shortestPath !==0 && shortestPath.length === 0){
+          remaining = results.shortestPath.slice(lastProcessedShortestPath)
+        } else if (shortestPath.length > 0 ) {
+          remaining = shortestPath.slice(lastProcessedShortestPath)
+        }
+        visualizeShortestPath(remaining);
+      }
+    }
+  }, [speed])
+
 
 
   const updateCell = useDispatch();
@@ -53,60 +102,60 @@ const Controls = (props) => {
     })
   }
 
+
+  // Iterate through visited arr creating timeout function at each idx.
+  // Callback function updates cell status to visited
+  // Delay is set to idx * speed (local state)
+  //    idx 0 = 0 timeout
+  //    idx 1 = 500 timeout
+  //    idx 2 = 1000 timeout
+  //    ...
+  //    idx 10 = 5000 timeout
+  const visualizeVisited = (arr) => {
+    //update local state shortestPath to be arr
+    setVisited(arr)
+    arr.forEach((nodeId, idx) => {
+      setTimeout(() => {
+        // update cell status to visited
+        updateCell(updateStatus(nodeId, 'visited'))
+        // setRunning to false when last item in arr executes AND no valid shortestPath is found
+        if(idx === arr.length - 1 && shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
+        setLastProcessedVisited(idx)
+      }, idx * speed)
+    })
+  }
+
+  const visualizeShortestPath = (arr) => {
+    //update local state shortestPath to be arr
+    setShortestPath(arr)
+    arr.forEach((nodeId, idx) => {
+      setTimeout(() => {
+        // update cell status to shortestPath
+        updateCell(updateStatus(nodeId, 'shortestPath'))
+        // setRunning to false when last item in arr executes
+        if(idx === arr.length - 1) dispatchRunningFalse(setRunningFalse())
+        setLastProcessedShortestPath(idx)
+      }, idx * speed)
+    })
+  }
+
+
+
   const handleRun = () => {
     if (running.isRunning === false) {
       dispatchRunningTrue(setRunningTrue())
 
-      console.log('calling DFS Traversal!')
-
       clearVisitedNodes();
 
-      const results = findDestination.run()
-      console.log('results', results)
+      // console.log('results', results)
 
+      // updates the status of cells in visited to visited
+      visualizeVisited(results.visited)
 
-      // Use setTimeout to
-      results.visited.forEach((nodeId, idx) => {
-        console.log(speed)
-        setTimeout(() => {
-          //console.log('visited', nodeId)
-          updateCell(updateStatus(nodeId, 'visited'))
-          //console.log(nodeId, 'type updated to', grid[nodeId].type)
-          if(idx === results.visited.length - 1 && results.shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
-        }, idx * speed) //?! update time to tie to speed var on state
+      // Visualize shortestPath is only called after visited cells have been updated
+      // updates the status of cells in shortestPath to shortestPath
+      setTimeout( () => visualizeShortestPath(results.shortestPath), results.visited.length * speed )
 
-        //idx 0 = 0 timeout
-        //idx 1 = 500 timeout
-        //idx 2 = 1000 timeout
-        //...
-        //idx 10 = 5000 timeout
-      })
-
-      //?! I don't like the solution below, it feels clunky.  I'd rather use async/await or promises
-
-      //?! we need to add a var for isRunning on state to ensure we can only run the algo if it's not already being run.
-
-      //?! we need a way to clear the board of visited nodes before we start an algorithm for the second time
-
-      //outer timeout delays call until after visited nodes have been traversed
-      setTimeout( () => {
-        results.shortestPath.forEach((nodeId, idx) => {
-          setTimeout(() => { // controls timeout for shortestPath
-            //console.log('shortestPath', nodeId)
-            updateCell(updateStatus(nodeId, 'shortestPath'))
-
-            console.log('results', results)
-
-            //console.log(nodeId, 'type updated to', grid[nodeId].type)
-            if(idx === results.shortestPath.length - 1) dispatchRunningFalse(setRunningFalse())
-
-          }, idx * speed) //?! update time to tie to speed var on state
-        })
-
-      }, results.visited.length * speed )
-
-      //console.log('start and end', grid.start, grid.end)
-      //depthFirst(grid.start, grid.end);
     } else {
       console.log('already running')
     }
@@ -115,6 +164,10 @@ const Controls = (props) => {
   const handleChangeAlgorithm = (event) => {
     // update selectedAlgorithm state to current selection
     setSelectedAlgorithm(event.target.value);
+  }
+
+  const handleChangeSpeed = (e) => {
+    setSpeed(parseInt(e.target.value))
   }
 
   return (
@@ -133,9 +186,9 @@ const Controls = (props) => {
       {/* toggle speed */}
       <label>
         Speed:<br/>
-        <select value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))}>
-          <option value="1">Really Fast</option>
-          <option value="20">Fast</option>
+        <select value={speed} onChange={(e) => handleChangeSpeed(e)}>
+          <option value="20">Really Fast</option>
+          <option value="40">Fast</option>
           <option value="75">Normal</option>
           <option value="150">Slow</option>
           <option value="250">Really Slow</option>
