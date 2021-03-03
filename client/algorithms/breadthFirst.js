@@ -38,7 +38,7 @@ export default class BreadthFirstSearch extends Algorithm {
 
     // if last item in visited is the endId find shortest path
     if(visited[visited.length-1].id === this.endId) {
-      // initialize currNode as destination in visited array
+      // initialize currNode as end in visited array
       let currNode = visited[visited.length-1];
 
       // find shortest path by traversing through currNode's  visited neighbors

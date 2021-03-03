@@ -18,11 +18,6 @@ const Row = (props) => {
   const draggingEnd = useSelector(state => state.isDraggingEnd)
   const previousCell = useSelector(state => state.previousCellType)
 
-  // ?! make these local state vars into global state variables to enable dragging functionality
-  // const [isDraggingStart, setIsDraggingStart] = useState(false)
-  // const [isDraggingEnd, setIsDraggingEnd] = useState(false)
-  // const [prevType, setPrevType] = useState('normal')
-
   const updateGrid = useDispatch()
   const updateCell = useDispatch()
   const dispatchDrawing = useDispatch()

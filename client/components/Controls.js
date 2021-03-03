@@ -61,7 +61,7 @@ const Controls = (props) => {
 
 
   // change rate at which each cell's status is changed and displayed to UI when speed changes
-  useEffect((arr) => {
+  useEffect(() => {
     // console.log('speed updated', speed, arr)
 
     if(running.isRunning){
@@ -74,6 +74,7 @@ const Controls = (props) => {
       setLastTimeoutId(killTimeouts)
 
       //Re-initialized visualizeVisited or visualizeShortestPath based on the last processed timeout (local state)
+      // if last processedVisted == visted.length -1 that means all visited elements have been processed, so move on to shortestPath
       if(lastProcessedVisited < visited.length-1) {
         const remaining = visited.slice(lastProcessedVisited)
         visualizeVisited(remaining)
