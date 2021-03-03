@@ -21,6 +21,9 @@ export default (width, height) => {
     // assign id
     adjList[node].id = node
 
+    // assign weight
+    adjList[node].weight = 1
+
     // increment y if we are at a new row
     if (node % width === 0 && node > 0) y++
 

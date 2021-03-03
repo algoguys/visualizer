@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
 import BreadthFirstSearch from '../algorithms/breadthFirst'
+import Dijkstra from '../algorithms/dijkstra'
 import { setRunningTrue, setRunningFalse } from '../store/running'
 
 
@@ -44,6 +45,9 @@ const Controls = (props) => {
         case 'BreadthFirstSearch':
           setDestinationFinder(new BreadthFirstSearch(grid))
           break;
+        case 'Dijkstra':
+          setDestinationFinder(new Dijkstra(grid))
+        break;
         default:
           break;
       }
@@ -190,6 +194,7 @@ const Controls = (props) => {
         <select value={selectedAlgorithm} onChange={(e) => handleChangeAlgorithm(e)}>
           <option value="DepthFirstSearch">Depth First Search</option>
           <option value="BreadthFirstSearch">Breadth First Search</option>
+          <option value="Dijkstra">Dijkstra's Algorithm</option>
         </select>
       </label>
 

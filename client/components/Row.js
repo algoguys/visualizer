@@ -8,6 +8,7 @@ import { setDraggingStartTrue, setDraggingStartFalse } from '../store/draggingSt
 import { updatePreviousCell } from '../store/previousCellType'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg-icons'
+import Dijkstra from '../algorithms/dijkstra'
 
 
 const Row = (props) => {
@@ -31,6 +32,14 @@ const Row = (props) => {
       updateCell(updateType(node.id, newType))
     }
   }
+
+  //! for testing djikstra, delete later
+  // if (grid[0]) {
+  //   const dijkstra = new Dijkstra(grid)
+  //   console.log('compare to length of grid', Object.keys(grid).length)
+  //   dijkstra.run()
+  // }
+
 
     return (
       <tr>
