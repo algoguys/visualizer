@@ -63,13 +63,18 @@ export default class Dijkstra extends Algorithm {
         return lookup[a].shortestDistance - lookup[b].shortestDistance
       })
       //reassign current
-      currId = unvisited[0]
+      //console.log(lookup[unvisited[0]].shortestDistance)
+      if(lookup[unvisited[0]].shortestDistance < Infinity) {
+        currId = unvisited[0]
+      } else break
     }
-
     const shortestPath = []
-    while(currId){
-      shortestPath.unshift(currId)
-      currId = lookup[currId].prevNodeId
+    if (parseInt(currId) === this.endId){
+      while(currId){
+        shortestPath.unshift(currId)
+        currId = lookup[currId].prevNodeId
+      }
+
     }
 
     return { visited, shortestPath }

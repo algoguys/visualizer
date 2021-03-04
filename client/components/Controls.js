@@ -263,12 +263,12 @@ const Controls = (props) => {
 
       {/* randomly set weights on all normal nodes */}
       <button onClick={() => setRandomWeights()}>
-        Set Weights
+        Generate Random Weights
       </button>
 
       {/* clear weights on all nodes */}
       <button onClick={() => resetAllWeights()}>
-        Set Weights
+        Clear Weights
       </button>
 
     </div>
