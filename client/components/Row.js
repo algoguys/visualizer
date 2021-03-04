@@ -65,7 +65,8 @@ const Row = (props) => {
             else if (grid[cellId].status === 'shortestPath') visitedClass = "shortestPath"
 
           return <td key={idx} id={cellId} cellid={cellId} className={`${typeClass} ${visitedClass}`}
-          onMouseDown={() => {
+          onMouseDown={(e) => {
+            e.preventDefault();
             if (!running.isRunning && !drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
               dispatchDrawing(setDrawingTrue());
               drawWall(grid[cellId])
@@ -81,6 +82,7 @@ const Row = (props) => {
           }}
           onMouseOver={(e) => {
             //console.log('previous cell', previousCell)
+            e.preventDefault()
             if(drawing.isDrawing){
               drawWall(grid[cellId])
             }
@@ -106,6 +108,7 @@ const Row = (props) => {
             }
           }}
           onMouseOut={(e) => {
+            e.preventDefault()
             if(draggingStart.isDraggingStart) {
               if(grid[cellId].type !== 'end') {
                 updateCell(updateType(cellId, previousCell.type))
@@ -116,6 +119,7 @@ const Row = (props) => {
             }
           }}
           onMouseUp={(e) => {
+            e.preventDefault()
             if (drawing.isDrawing) dispatchDrawing(setDrawingFalse())
             else if (draggingStart.isDraggingStart) {
               dispatchDraggingStart(setDraggingStartFalse())
@@ -133,7 +137,7 @@ const Row = (props) => {
           {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
 
           {grid[cellId].type === "end" && <FontAwesomeIcon id="endNodeIcon" icon={faTimes} />}
-          {grid[cellId].weight > 1 && grid[cellId].weight}
+          {grid[cellId].type === "normal" && grid[cellId].weight > 1 && grid[cellId].weight}
           </td>
           }))
         }

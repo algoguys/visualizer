@@ -34,6 +34,7 @@ const Controls = (props) => {
   const [shortestPath, setShortestPath] = useState([])
 
 
+
   // update destination finder
   useEffect(() => {
     // console.log('set destination finder effect running')
@@ -219,17 +220,28 @@ const Controls = (props) => {
     setSpeed(parseInt(e.target.value))
   }
 
+  const handleResetBoard = (e) => {
+    //?! Poor practice: make width and heigh global state variables
+    const width = Math.floor(document.getElementById('main').offsetWidth/25)
+    const height = Math.floor((window.innerHeight-275)/25)
+    resetBoard(makeGrid(width, height))
+    selectedAlgorithm == 'Dijkstra' ? setRandomWeights() : resetAllWeights()
+  }
+
+  if(!running.isRunning){
+    // console.log('not running')
+  }
+
   return (
     <div className="controls">
-      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
 
       {/* toggle selectedAlgorithm */}
       <label>
         Select Pathfinding Algorithm:<br/>
         <select value={selectedAlgorithm} onChange={(e) => handleChangeAlgorithm(e)}>
-          <option value="DepthFirstSearch">Depth First Search</option>
           <option value="BreadthFirstSearch">Breadth First Search</option>
           <option value="Dijkstra">Dijkstra's Algorithm</option>
+          <option value="DepthFirstSearch">Depth First Search</option>
         </select>
       </label>
 
@@ -246,30 +258,20 @@ const Controls = (props) => {
         </select>
       </label>
 
-      {/* reset board  */}
-      <button onClick={() => {
-        //?! Poor practice: make width and heigh global state variables
-        const width = Math.floor(document.getElementById('main').offsetWidth/25)
-        const height = Math.floor((window.innerHeight-275)/25)
-        resetBoard(makeGrid(width, height))
-        }}>
-        Reset Board
-      </button>
+      {/* play button */}
+      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
 
       {/* clear visited nodes */}
-      <button onClick={() => clearVisitedNodes()}>
-        Clear Visited Nodes
-      </button>
+      <button onClick={() => clearVisitedNodes()}>Clear Visited Nodes</button>
+
+      {/* reset board  */}
+      <button onClick={() => handleResetBoard()}>Reset Board</button>
 
       {/* randomly set weights on all normal nodes */}
-      <button onClick={() => setRandomWeights()}>
-        Generate Random Weights
-      </button>
+      {selectedAlgorithm === 'Dijkstra' && <button onClick={() => setRandomWeights()}>Generate Random Weights</button>}
 
-      {/* clear weights on all nodes */}
-      <button onClick={() => resetAllWeights()}>
-        Clear Weights
-      </button>
+      {/* clear weights on all nodes  */}
+      {selectedAlgorithm === 'Dijkstra' && <button onClick={() => resetAllWeights()}> Clear Weights </button>}
 
     </div>
 

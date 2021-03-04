@@ -1,10 +1,21 @@
+:root {
+  --td-bg-color: white;
+  --end-node-color: red;
+  --table-bg-color: #dbe9f4;
+  --wall-color: #36496a;
+  --visited-initial: #ffe017;
+  --visited-final: #12AEED;
+  --shortest-Path: #ffe017;
+  --hover-buttons: #12AEED;
+}
+
 td {
   height: 25px;
   width: 25px;
   transition: background-color 0.35s ease;
   /* Controls color of cells*/
   /* background-color: #e6f9ff; */
-  background-color: white;
+  background-color: var(--td-bg-color);
 }
 
 td #startNodeIcon {
@@ -21,7 +32,7 @@ td #endNodeIcon {
   display: block;
   margin: auto;
   /* font-size: 1.45rem; */
-  color: #d12300;
+  color: var(--end-node-color);
 }
 
 .keybox #startKeyIcon {
@@ -36,58 +47,68 @@ td #endNodeIcon {
   margin: auto;
   margin-top: 0.2rem;
   /* font-size: 1.45rem; */
-  color: #d12300;
+  color: var(--end-node-color);
 }
 
 table {
   /* Controls color of outlines*/
   /* 006280 */
-  background-color: #dbe9f4;
+  background-color: var(--table-bg-color);
   border-spacing: 1px;
 }
 
 /* types */
 .wall {
-  background-color: #36496a;
+  background-color: var(--wall-color);
 }
 .start {
-  background-color: white;
+  background-color: var(--td-bg-color);
 }
 .end {
-  background-color: white;
+  background-color: var(--td-bg-color);
+}
+
+@keyframes sample {
+  from {background-color: var(--visited-initial);}
+  to {background-color: var(--visited-final);}
 }
 
 /* statuses */
 .visited {
-  background-color: #8fb8d7;
-  /* background-color: #00B383;
-  background-color: #00B0E6; */
+  background-color: var(--visited-final);
+  animation-name: sample;
+  animation-duration: 2s;
+  /* background: orange; */
+
 }
+
 .start.visited {
-  background-color: #8fb8d7;
+  background-color: var(--visited-final);
+  animation-name: sample;
   /* background-color: #00B383;
   background-color: #00B0E6; */
 }
 .end.visited {
-  background-color: #8fb8d7;
+  background-color: var(--visited-final);
+  animation-name: sample;
   /* background-color: #00B383;
   background-color: #00B0E6; */
 }
 .wall.visited {
-  background-color: #36496a;
+  background-color: var(--wall-color);
 }
 
 .shortestPath {
-  background-color: #ffe017;
+  background-color: var(--shortest-Path);
 }
 .start.shortestPath {
-  background-color: #ffe017;
+  background-color: var(--shortest-Path);
 }
 .end.shortestPath {
-  background-color: #ffe017;
+  background-color: var(--shortest-Path);
 }
 .wall.shortestPath {
-  background-color: #36496a;
+  background-color: var(--wall-color);
 }
 
 /* GridKey Component */
@@ -108,7 +129,7 @@ table {
 .keybox {
   height: 25px;
   width: 25px;
-  border: 1px solid #dbe9f4;
+  border: 1px solid var(--table-bg-color);
   margin-right: 1rem;
 }
 
@@ -125,15 +146,15 @@ table {
 }
 
 .clickable-control {
-  color: #36496a;
+  color: var(--wall-color);
 }
 
 .clickable-control:hover {
-  color: #3c7aa9;
+  color: var(--hover-buttons);
 }
 
 .controls {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
 }
