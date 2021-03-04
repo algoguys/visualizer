@@ -15,6 +15,7 @@ const UPDATE_STATUS = 'UPDATE_STATUS' //? update the node status, when we implem
 const UPDATE_TYPE = 'UPDATE_TYPE' //? update the node type, when we implement controls
 const UPDATE_START = 'UPDATE_START'
 const UPDATE_END = 'UPDATE_END'
+const UPDATE_WEIGHT = 'UPDATE_WEIGHT'
 
 /**
  * ACTION CREATORS
@@ -26,6 +27,7 @@ export const updateStatus = (id, nodeStatus) => ({type: UPDATE_STATUS, id, nodeS
 export const updateType = (id, nodeType) => ({type: UPDATE_TYPE, id, nodeType})
 export const updateStart = (id) => ({type: UPDATE_START, id})
 export const updateEnd = (id) => ({type: UPDATE_END, id})
+export const updateWeight = (id, newWeight) => ({type: UPDATE_WEIGHT, id, newWeight})
 
 
 /**
@@ -44,6 +46,10 @@ export default function(state = grid, action) {
     case UPDATE_TYPE:
       state[action.id].type = action.nodeType;
       return { ...state }
+    case UPDATE_WEIGHT:
+      state[action.id].weight = action.newWeight;
+
+      return { ...state}
     case UPDATE_START:
       return { ...state, start: action.id }
     case UPDATE_END:

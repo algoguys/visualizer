@@ -9,14 +9,9 @@ export default class Dijkstra extends Algorithm {
 
   run() {
     const visited = []
-    let unvisited = Object.keys(this.grid).sort((a, b) => a - b).slice(0, -2)
-
-    const oppositeDir = {
-      left: 'right',
-      right: 'left',
-      up: 'down',
-      down: 'up',
-    }
+    let unvisited = Object.keys(this.grid)
+        .sort((a, b) => a - b)
+        .slice(0, -2)
 
     // initialize lookup object, and populate it with each node
     const lookup = {}
@@ -30,68 +25,36 @@ export default class Dijkstra extends Algorithm {
       }
     }
 
-    console.log('unvisited', unvisited)
-    console.log('lookup', lookup)
-
     // visit the starting node
     lookup[this.grid.start].shortestDistance = 0
     lookup[this.grid.start].visited = true
 
+    // initialize starting shortest distance from start to start node
     let currId = this.grid.start
 
-    // prevDirection = currDirection
-    // currDirection = 'up'
-    // if (currDirection !== prevDirection) cost = 2
-
-    let currDirection = 'right'
-    let prevDirection = 'right'
-
     while (unvisited.length) {
-
-      console.log('current id', currId)
-
       lookup[currId].visited = true  // mark the current node as visited
 
       unvisited = unvisited.filter(id => id !== currId) // removes current visited node id from unvisited
 
       visited.push(currId) // add current id to visited
 
+
+      if(parseInt(currId) === this.endId) break // break if end node is found
+
       // check each neighbors
       this.grid[currId].neighbors.forEach((neighborId) => {
+        if(this.grid[neighborId].type === 'normal' || this.grid[neighborId].type === 'end' ) {
+          const neighborNode = lookup[neighborId]
+          const currNode = lookup[currId]
 
-        const neighborNode = lookup[neighborId]
-        const currNode = lookup[currId]
+          const newDistance = neighborNode.cost + currNode.shortestDistance
 
-        if (!neighborNode.visited) {
-          prevDirection = currDirection
-          if (neighborId === currId + 1) {
-            // go right
-            currDirection = 'right'
-          } else if (neighborId === currId - 1) {
-            // go left
-            currDirection = 'left'
-          } else if (neighborId < currId - 1) {
-            // go up
-            currDirection = 'up'
-          } else if (neighborId > currId + 1) {
-            // go down
-            currDirection = 'down'
+          // if the new distance is shorter than the prev distance, overwrite prev distance and assign the prevNode value on neighbor to currId
+          if (newDistance < neighborNode.shortestDistance) {
+            neighborNode.shortestDistance = newDistance
+            neighborNode.prevNodeId = currId
           }
-        }
-
-        let newDistance = Infinity
-        if (currDirection === prevDirection || prevDirection === oppositeDir[currDirection]) {
-          // add up to find the distance from start
-          newDistance = neighborNode.cost + currNode.shortestDistance
-        } else {
-          newDistance = neighborNode.cost + currNode.shortestDistance + 1
-        }
-
-
-        // if the new distance is shorter than the prev distance, overwrite prev distance
-        if (newDistance < neighborNode.shortestDistance) {
-          neighborNode.shortestDistance = newDistance
-          neighborNode.prevNodeId = currId
         }
       })
 
@@ -99,14 +62,17 @@ export default class Dijkstra extends Algorithm {
       unvisited.sort((a, b) => {
         return lookup[a].shortestDistance - lookup[b].shortestDistance
       })
+      //reassign current
       currId = unvisited[0]
-
     }
 
-    return {
-      visited: visited,
-      shortestPath: [],
+    const shortestPath = []
+    while(currId){
+      shortestPath.unshift(currId)
+      currId = lookup[currId].prevNodeId
     }
+
+    return { visited, shortestPath }
 
   }
 

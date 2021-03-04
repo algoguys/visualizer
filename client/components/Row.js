@@ -133,6 +133,7 @@ const Row = (props) => {
           {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
 
           {grid[cellId].type === "end" && <FontAwesomeIcon id="endNodeIcon" icon={faTimes} />}
+          {grid[cellId].weight > 1 && grid[cellId].weight}
           </td>
           }))
         }

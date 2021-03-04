@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { updateStatus, makeGrid } from '../store/grid'
+import { updateStatus, makeGrid, updateWeight } from '../store/grid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
@@ -37,7 +37,7 @@ const Controls = (props) => {
   // update destination finder
   useEffect(() => {
     // console.log('set destination finder effect running')
-    if(grid[0]) {
+    if(grid[0] && !running.isRunning) {
       switch (selectedAlgorithm) {
         case 'DepthFirstSearch':
           setDestinationFinder(new DepthFirstSearch(grid))
@@ -47,13 +47,28 @@ const Controls = (props) => {
           break;
         case 'Dijkstra':
           setDestinationFinder(new Dijkstra(grid))
-        break;
+          break;
         default:
           break;
       }
       // console.log('destinationFinder updated', destinationFinder)
     }
   }, [grid, selectedAlgorithm])
+
+  // update results if destinationFinder changes
+  useEffect(() => {
+    switch (selectedAlgorithm) {
+      case 'DepthFirstSearch':
+      case 'BreadthFirstSearch':
+        resetAllWeights()
+        break;
+      case 'Dijkstra':
+        setRandomWeights()
+        break;
+      default:
+        break;
+    }
+  }, [selectedAlgorithm])
 
   // update results if destinationFinder changes
   useEffect(() => {
@@ -103,6 +118,7 @@ const Controls = (props) => {
   const dispatchRunningTrue = useDispatch();
   const dispatchRunningFalse = useDispatch();
   const resetBoard = useDispatch();
+  const dispatchWeight = useDispatch();
 
   const clearVisitedNodes = () => {
     //sorted array of properties in grid that correspond to node ids
@@ -114,6 +130,25 @@ const Controls = (props) => {
         updateCell(updateStatus(nodeId, 'unvisited'))
       }
     })
+  }
+
+  const setRandomWeights = () => {
+    for(const nodeId in grid) {
+      if(grid[nodeId].id && grid[nodeId].type ==='normal'){
+        //assign newWeight a value between 1 and 9
+        const newWeight = Math.floor(Math.random() * Math.floor(9)) + 1
+        //console.log(newWeight)
+        dispatchWeight(updateWeight(nodeId, newWeight))
+      }
+    }
+  }
+
+  const resetAllWeights = () => {
+    for(const nodeId in grid) {
+      if(grid[nodeId].id){
+        dispatchWeight(updateWeight(nodeId, 1))
+      }
+    }
   }
 
 
@@ -224,6 +259,16 @@ const Controls = (props) => {
       {/* clear visited nodes */}
       <button onClick={() => clearVisitedNodes()}>
         Clear Visited Nodes
+      </button>
+
+      {/* randomly set weights on all normal nodes */}
+      <button onClick={() => setRandomWeights()}>
+        Set Weights
+      </button>
+
+      {/* clear weights on all nodes */}
+      <button onClick={() => resetAllWeights()}>
+        Set Weights
       </button>
 
     </div>
