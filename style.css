@@ -2,11 +2,18 @@
   --td-bg-color: white;
   --end-node-color: red;
   --table-bg-color: #dbe9f4;
-  --wall-color: #36496a;
+  --water-color: #0f52ba;
   --visited-initial: #ffe017;
   --visited-final: #12AEED;
   --shortest-Path: #ffe017;
   --hover-buttons: #12AEED;
+  --field-color: #f5deb3;
+  --brush-color: #c19a6b;
+  --woods-color: green;
+  --forest-color: #195905;
+  --foothill-color: #738276;
+  --mountain-color: #36454f;
+
 }
 
 td {
@@ -58,8 +65,8 @@ table {
 }
 
 /* types */
-.wall {
-  background-color: var(--wall-color);
+.water {
+  background-color: var(--water-color);
 }
 .start {
   background-color: var(--td-bg-color);
@@ -94,8 +101,8 @@ table {
   /* background-color: #00B383;
   background-color: #00B0E6; */
 }
-.wall.visited {
-  background-color: var(--wall-color);
+.water.visited {
+  background-color: var(--water-color);
 }
 
 .shortestPath {
@@ -107,8 +114,8 @@ table {
 .end.shortestPath {
   background-color: var(--shortest-Path);
 }
-.wall.shortestPath {
-  background-color: var(--wall-color);
+.water.shortestPath {
+  background-color: var(--water-color);
 }
 
 /* GridKey Component */
@@ -146,7 +153,7 @@ table {
 }
 
 .clickable-control {
-  color: var(--wall-color);
+  color: var(--water-color);
 }
 
 .clickable-control:hover {

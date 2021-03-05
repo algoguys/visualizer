@@ -7,12 +7,14 @@ import DepthFirstSearch from '../algorithms/depthFirst'
 import BreadthFirstSearch from '../algorithms/breadthFirst'
 import Dijkstra from '../algorithms/dijkstra'
 import { setRunningTrue, setRunningFalse } from '../store/running'
+import { changeBrush } from "../store/paintbrush";
 
 
 const Controls = (props) => {
   // ********* global state ************** //
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
+  const paintbrush = useSelector(state => state.paintbrush)
 
   // ********** local state ************** //
   // currently selected speed
@@ -33,7 +35,7 @@ const Controls = (props) => {
   const [visited, setVisited] = useState([])
   const [shortestPath, setShortestPath] = useState([])
 
-
+  // console.log(paintbrush)
 
   // update destination finder
   useEffect(() => {
@@ -120,6 +122,7 @@ const Controls = (props) => {
   const dispatchRunningFalse = useDispatch();
   const resetBoard = useDispatch();
   const dispatchWeight = useDispatch();
+  const updatePaintbrush = useDispatch();
 
   const clearVisitedNodes = () => {
     //sorted array of properties in grid that correspond to node ids
@@ -220,6 +223,10 @@ const Controls = (props) => {
     setSpeed(parseInt(e.target.value))
   }
 
+  const handleChangePaintbrush = (e) => {
+    updatePaintbrush(changeBrush(e.target.value))
+  }
+
   const handleResetBoard = (e) => {
     //?! Poor practice: make width and heigh global state variables
     const width = Math.floor(document.getElementById('main').offsetWidth/25)
@@ -257,6 +264,22 @@ const Controls = (props) => {
 
         </select>
       </label>
+
+      {/* toggle paintbrush */}
+      <label>
+        Draw Obstacles:<br/>
+        <select value={paintbrush} onChange={(e) => handleChangePaintbrush(e)}>
+          <option value="water">Water (impassible)</option>
+          <option value="mountain">Mountain (weight6)</option>
+          <option value="foothill">Foothill (weight 5)</option>
+          <option value="forest">Forest (weight 4)</option>
+          <option value="woods">Woods (weight 3)</option>
+          <option value="brush">Brush (weight 2)</option>
+          <option value="field">Field (weight 1)</option>
+        </select>
+      </label>
+
+
 
       {/* play button */}
       <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>

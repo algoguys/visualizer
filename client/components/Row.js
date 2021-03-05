@@ -18,6 +18,7 @@ const Row = (props) => {
   const draggingStart = useSelector(state => state.isDraggingStart)
   const draggingEnd = useSelector(state => state.isDraggingEnd)
   const previousCell = useSelector(state => state.previousCellType)
+  const paintbrush = useSelector(state => state.paintbrush)
 
   const updateGrid = useDispatch()
   const updateCell = useDispatch()
@@ -26,8 +27,9 @@ const Row = (props) => {
   const dispatchDraggingEnd = useDispatch()
   const dispatchPreviousCell = useDispatch()
 
-  const drawWall = (node) => {
-    let newType = node.type === 'wall' ? 'normal' : 'wall'
+  const drawWater = (node) => {
+
+    let newType = node.type === 'water' ? 'normal' : 'water'
     if(node.type !== 'start' && node.type !== 'end') {
       updateCell(updateType(node.id, newType))
     }
@@ -41,6 +43,21 @@ const Row = (props) => {
   // }
 
 
+  function hanleOnMouseDown(event, cellId) {
+    event.preventDefault();
+    if (!running.isRunning && !drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
+      dispatchDrawing(setDrawingTrue());
+      drawWater(grid[cellId])
+    }
+    else if (!running.isRunning && !draggingStart.isDraggingStart && grid[cellId].type === 'start' ){
+      dispatchDraggingStart(setDraggingStartTrue())
+      console.log('start dragging the start')
+    }
+    else if (!running.isRunning && !draggingEnd.isDraggingEnd && grid[cellId].type === 'end'){
+      dispatchDraggingEnd(setDraggingEndTrue())
+      console.log('start dragging the end')
+    }
+  }
     return (
       <tr>
         {
@@ -56,7 +73,7 @@ const Row = (props) => {
               typeClass = "end"
             }
             else if (grid[cellId].type === 'normal') typeClass = "normal"
-            else if (grid[cellId].type === 'wall') typeClass = "wall"
+            else if (grid[cellId].type === 'water') typeClass = "water"
 
 
             let visitedClass = "unvisited"
@@ -65,26 +82,12 @@ const Row = (props) => {
             else if (grid[cellId].status === 'shortestPath') visitedClass = "shortestPath"
 
           return <td key={idx} id={cellId} cellid={cellId} className={`${typeClass} ${visitedClass}`}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            if (!running.isRunning && !drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
-              dispatchDrawing(setDrawingTrue());
-              drawWall(grid[cellId])
-            }
-            else if (!running.isRunning && !draggingStart.isDraggingStart && grid[cellId].type === 'start' ){
-              dispatchDraggingStart(setDraggingStartTrue())
-              console.log('start dragging the start')
-            }
-            else if (!running.isRunning && !draggingEnd.isDraggingEnd && grid[cellId].type === 'end'){
-              dispatchDraggingEnd(setDraggingEndTrue())
-              console.log('start dragging the end')
-            }
-          }}
+          onMouseDown={(e => hanleOnMouseDown(e, cellId))}
           onMouseOver={(e) => {
             //console.log('previous cell', previousCell)
             e.preventDefault()
             if(drawing.isDrawing){
-              drawWall(grid[cellId])
+              drawWater(grid[cellId])
             }
             else if(draggingStart.isDraggingStart){
               if(grid[cellId].type !== 'end') {

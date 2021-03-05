@@ -6,9 +6,10 @@ import isRunning from './running'
 import isDraggingStart from './draggingStart'
 import isDraggingEnd from './draggingEnd'
 import previousCellType from './previousCellType'
+import paintbrush from './paintbrush'
 //? import stores and combine them here (use the same syntax as lines 3, 6 ,11)
 
-const reducer = combineReducers({grid, algorithms, isDrawing, isRunning, isDraggingEnd, isDraggingStart, previousCellType})
+const reducer = combineReducers({grid, algorithms, isDrawing, isRunning, isDraggingEnd, isDraggingStart, previousCellType, paintbrush})
 
 const store = createStore(reducer)
 

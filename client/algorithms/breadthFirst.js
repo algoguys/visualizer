@@ -24,8 +24,8 @@ export default class BreadthFirstSearch extends Algorithm {
       if(currNode.id === this.endId) break;
       // iterate through currNode's neighbors
       this.grid[currNode.id].neighbors.forEach (neighborId => {
-        //Do not push neighbor to queue if neighbor has already been visited, if it's a wall, or if itsstart node
-        if(!lookupVisited[neighborId] && this.grid[neighborId].type !== 'wall' && this.grid[neighborId].type !== 'start') {
+        //Do not push neighbor to queue if neighbor has already been visited, if it's a water, or if itsstart node
+        if(!lookupVisited[neighborId] && this.grid[neighborId].type !== 'water' && this.grid[neighborId].type !== 'start') {
           const newNode = {
             id: neighborId,
             distanceToStart: currNode.distanceToStart + 1
