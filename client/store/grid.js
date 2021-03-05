@@ -48,7 +48,7 @@ export default function(state = grid, action) {
       return { ...state }
     case UPDATE_WEIGHT:
       state[action.id].weight = action.newWeight;
-
+      console.log('new weight', action.newWeight)
       return { ...state}
     case UPDATE_START:
       return { ...state, start: action.id }

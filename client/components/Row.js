@@ -1,6 +1,6 @@
 import React, { useState }from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { updateType, updateStart, updateEnd } from '../store/grid'
+import { updateType, updateStart, updateEnd, updateWeight } from '../store/grid'
 import { setDrawingTrue, setDrawingFalse} from '../store/drawing'
 // { setDraggingEndTrue, setDraggingEndFalse, setDraggingStartTrue, setDraggingStartFalse, updatePreviousCell } from '../store'
 import { setDraggingEndTrue, setDraggingEndFalse } from '../store/draggingEnd'
@@ -27,12 +27,33 @@ const Row = (props) => {
   const dispatchDraggingEnd = useDispatch()
   const dispatchPreviousCell = useDispatch()
 
-  const drawWater = (node) => {
+  const drawSelected = (node) => {
 
-    let newType = node.type === 'water' ? 'normal' : 'water'
-    if(node.type !== 'start' && node.type !== 'end') {
-      updateCell(updateType(node.id, newType))
+    //let newType = node.type === 'water' ? 'normal' : 'water'
+    switch(paintbrush){
+      case 'water':
+        updateCell(updateType(node.id, 'water'))
+        break;
+      case 'mountain':
+        updateGrid(updateWeight(node.id, 6))
+      case 'foothill':
+        updateGrid(updateWeight(node.id, 5))
+      case 'forest':
+        updateGrid(updateWeight(node.id, 4))
+      case 'woods':
+        updateGrid(updateWeight(node.id, 3))
+      case 'brush':
+        updateGrid(updateWeight(node.id, 2))
+      case 'field':
+        updateGrid(updateWeight(node.id, 1))
+
+      default:
+        break;
+
+
     }
+    // if(node.type !== 'start' && node.type !== 'end') {
+    // }
   }
 
   //! for testing djikstra, delete later
@@ -45,9 +66,10 @@ const Row = (props) => {
 
   function hanleOnMouseDown(event, cellId) {
     event.preventDefault();
+    // drawing logic
     if (!running.isRunning && !drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
       dispatchDrawing(setDrawingTrue());
-      drawWater(grid[cellId])
+      drawSelected(grid[cellId])
     }
     else if (!running.isRunning && !draggingStart.isDraggingStart && grid[cellId].type === 'start' ){
       dispatchDraggingStart(setDraggingStartTrue())
@@ -86,8 +108,8 @@ const Row = (props) => {
           onMouseOver={(e) => {
             //console.log('previous cell', previousCell)
             e.preventDefault()
-            if(drawing.isDrawing){
-              drawWater(grid[cellId])
+            if(drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end'){
+              drawSelected(grid[cellId])
             }
             else if(draggingStart.isDraggingStart){
               if(grid[cellId].type !== 'end') {
