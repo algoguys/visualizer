@@ -139,8 +139,8 @@ const Controls = (props) => {
   const setRandomWeights = () => {
     for(const nodeId in grid) {
       if(grid[nodeId].id && grid[nodeId].type ==='normal'){
-        //assign newWeight a value between 1 and 9
-        const newWeight = Math.floor(Math.random() * Math.floor(9)) + 1
+        //assign newWeight a value between 1 and 6
+        const newWeight = Math.floor(Math.random() * Math.floor(6)) + 1
         //console.log(newWeight)
         dispatchWeight(updateWeight(nodeId, newWeight))
       }
