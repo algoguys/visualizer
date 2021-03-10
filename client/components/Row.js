@@ -36,22 +36,35 @@ const Row = (props) => {
         break;
       case 'mountain':
         updateGrid(updateWeight(node.id, 6))
+        updateCell(updateType(node.id, 'normal'))
+        break;
       case 'foothill':
         updateGrid(updateWeight(node.id, 5))
+        updateCell(updateType(node.id, 'normal'))
+        break;
       case 'forest':
         updateGrid(updateWeight(node.id, 4))
+        updateCell(updateType(node.id, 'normal'))
+        break;
       case 'woods':
         updateGrid(updateWeight(node.id, 3))
+        updateCell(updateType(node.id, 'normal'))
+        break;
       case 'brush':
         updateGrid(updateWeight(node.id, 2))
+        updateCell(updateType(node.id, 'normal'))
+        break;
       case 'field':
         updateGrid(updateWeight(node.id, 1))
-
+        updateCell(updateType(node.id, 'normal'))
+        break;
       default:
         break;
 
 
     }
+
+    console.log(node)
     // if(node.type !== 'start' && node.type !== 'end') {
     // }
   }
