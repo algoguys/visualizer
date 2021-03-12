@@ -4,16 +4,15 @@
   --table-bg-color: #dbe9f4;
   --water-color: #0f52ba;
   --visited-initial: #ffe017;
-  --visited-final: #12AEED;
+  --visited-final: #12aeed;
   --shortest-Path: #ffe017;
-  --hover-buttons: #12AEED;
+  --hover-buttons: #12aeed;
   --field-color: #f5deb3;
   --brush-color: #c19a6b;
   --woods-color: green;
   --forest-color: #195905;
   --foothill-color: #738276;
   --mountain-color: #36454f;
-
 }
 
 td {
@@ -76,8 +75,12 @@ table {
 }
 
 @keyframes sample {
-  from {background-color: var(--visited-initial);}
-  to {background-color: var(--visited-final);}
+  from {
+    background-color: var(--visited-initial);
+  }
+  to {
+    background-color: var(--visited-final);
+  }
 }
 
 /* statuses */
@@ -86,7 +89,6 @@ table {
   animation-name: sample;
   animation-duration: 2s;
   /* background: orange; */
-
 }
 
 .start.visited {
@@ -140,23 +142,12 @@ table {
   margin-right: 1rem;
 }
 
-#playAlgo {
+.playPause {
+  color: var(--water-color);
   margin: 1rem;
 }
 
-.unclickable-control {
-  color: grey;
-}
-
-.unclickable-control:hover {
-  color: grey;
-}
-
-.clickable-control {
-  color: var(--water-color);
-}
-
-.clickable-control:hover {
+.playPause:hover {
   color: var(--hover-buttons);
 }
 
