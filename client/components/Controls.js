@@ -59,19 +59,19 @@ const Controls = (props) => {
   }, [grid, selectedAlgorithm])
 
   // update results if destinationFinder changes
-  useEffect(() => {
-    switch (selectedAlgorithm) {
-      case 'DepthFirstSearch':
-      case 'BreadthFirstSearch':
-        resetAllWeights()
-        break;
-      case 'Dijkstra':
-        setRandomWeights()
-        break;
-      default:
-        break;
-    }
-  }, [selectedAlgorithm])
+  // useEffect(() => {
+  //   switch (selectedAlgorithm) {
+  //     case 'DepthFirstSearch':
+  //     case 'BreadthFirstSearch':
+  //       resetAllWeights()
+  //       break;
+  //     case 'Dijkstra':
+  //       setRandomWeights()
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // }, [selectedAlgorithm])
 
   // update results if destinationFinder changes
   useEffect(() => {
@@ -287,15 +287,14 @@ const Controls = (props) => {
       {/* clear visited nodes */}
       <button onClick={() => clearVisitedNodes()}>Clear Visited Nodes</button>
 
-      {/* reset board  */}
-      <button onClick={() => handleResetBoard()}>Reset Board</button>
-
       {/* randomly set weights on all normal nodes */}
-      {selectedAlgorithm === 'Dijkstra' && <button onClick={() => setRandomWeights()}>Generate Random Weights</button>}
+      {<button onClick={() => setRandomWeights()}>Generate Random Weights</button>}
 
       {/* clear weights on all nodes  */}
-      {selectedAlgorithm === 'Dijkstra' && <button onClick={() => resetAllWeights()}> Clear Weights </button>}
+      {<button onClick={() => resetAllWeights()}> Clear Weights </button>}
 
+      {/* reset board  */}
+      <button onClick={() => handleResetBoard()}>Reset Board</button>
     </div>
 
   )
