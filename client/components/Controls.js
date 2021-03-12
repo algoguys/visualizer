@@ -287,6 +287,7 @@ const Controls = (props) => {
       {/* clear visited nodes */}
       <button onClick={() => clearVisitedNodes()}>Clear Visited Nodes</button>
 
+
       {/* randomly set weights on all normal nodes */}
       {<button onClick={() => setRandomWeights()}>Generate Random Weights</button>}
 
