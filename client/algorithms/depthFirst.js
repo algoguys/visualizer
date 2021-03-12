@@ -28,7 +28,7 @@ export default class DepthFirstSearch extends Algorithm {
       //console.log('neighbors', neighbors)
       for (let i = 0; i < neighbors.length; i++) {
         const neighborId = neighbors[i]
-        if (!visited.includes(neighborId) && grid[neighborId].type !== 'wall') {
+        if (!visited.includes(neighborId) && grid[neighborId].type !== 'water') {
           //console.log(`next node: grid[${neighborId}]`)
           const response = this.run(neighborId, visited)
           //console.log('response', response)

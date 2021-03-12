@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { updateStatus, makeGrid } from '../store/grid'
+import { updateStatus, makeGrid, updateWeight } from '../store/grid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
 import BreadthFirstSearch from '../algorithms/breadthFirst'
+import Dijkstra from '../algorithms/dijkstra'
 import { setRunningTrue, setRunningFalse } from '../store/running'
+import { changeBrush } from "../store/paintbrush";
 
 
 const Controls = (props) => {
   // ********* global state ************** //
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
+  const paintbrush = useSelector(state => state.paintbrush)
 
   // ********** local state ************** //
   // currently selected speed
@@ -32,11 +35,12 @@ const Controls = (props) => {
   const [visited, setVisited] = useState([])
   const [shortestPath, setShortestPath] = useState([])
 
+  // console.log(paintbrush)
 
   // update destination finder
   useEffect(() => {
     // console.log('set destination finder effect running')
-    if(grid[0]) {
+    if(grid[0] && !running.isRunning) {
       switch (selectedAlgorithm) {
         case 'DepthFirstSearch':
           setDestinationFinder(new DepthFirstSearch(grid))
@@ -44,12 +48,30 @@ const Controls = (props) => {
         case 'BreadthFirstSearch':
           setDestinationFinder(new BreadthFirstSearch(grid))
           break;
+        case 'Dijkstra':
+          setDestinationFinder(new Dijkstra(grid))
+          break;
         default:
           break;
       }
       // console.log('destinationFinder updated', destinationFinder)
     }
   }, [grid, selectedAlgorithm])
+
+  // update results if destinationFinder changes
+  useEffect(() => {
+    switch (selectedAlgorithm) {
+      case 'DepthFirstSearch':
+      case 'BreadthFirstSearch':
+        resetAllWeights()
+        break;
+      case 'Dijkstra':
+        setRandomWeights()
+        break;
+      default:
+        break;
+    }
+  }, [selectedAlgorithm])
 
   // update results if destinationFinder changes
   useEffect(() => {
@@ -99,6 +121,8 @@ const Controls = (props) => {
   const dispatchRunningTrue = useDispatch();
   const dispatchRunningFalse = useDispatch();
   const resetBoard = useDispatch();
+  const dispatchWeight = useDispatch();
+  const updatePaintbrush = useDispatch();
 
   const clearVisitedNodes = () => {
     //sorted array of properties in grid that correspond to node ids
@@ -110,6 +134,25 @@ const Controls = (props) => {
         updateCell(updateStatus(nodeId, 'unvisited'))
       }
     })
+  }
+
+  const setRandomWeights = () => {
+    for(const nodeId in grid) {
+      if(grid[nodeId].id && grid[nodeId].type ==='normal'){
+        //assign newWeight a value between 1 and 6
+        const newWeight = Math.floor(Math.random() * Math.floor(6)) + 1
+        //console.log(newWeight)
+        dispatchWeight(updateWeight(nodeId, newWeight))
+      }
+    }
+  }
+
+  const resetAllWeights = () => {
+    for(const nodeId in grid) {
+      if(grid[nodeId].id){
+        dispatchWeight(updateWeight(nodeId, 1))
+      }
+    }
   }
 
 
@@ -180,16 +223,32 @@ const Controls = (props) => {
     setSpeed(parseInt(e.target.value))
   }
 
+  const handleChangePaintbrush = (e) => {
+    updatePaintbrush(changeBrush(e.target.value))
+  }
+
+  const handleResetBoard = (e) => {
+    //?! Poor practice: make width and heigh global state variables
+    const width = Math.floor(document.getElementById('main').offsetWidth/25)
+    const height = Math.floor((window.innerHeight-275)/25)
+    resetBoard(makeGrid(width, height))
+    selectedAlgorithm == 'Dijkstra' ? setRandomWeights() : resetAllWeights()
+  }
+
+  if(!running.isRunning){
+    // console.log('not running')
+  }
+
   return (
     <div className="controls">
-      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
 
       {/* toggle selectedAlgorithm */}
       <label>
         Select Pathfinding Algorithm:<br/>
         <select value={selectedAlgorithm} onChange={(e) => handleChangeAlgorithm(e)}>
-          <option value="DepthFirstSearch">Depth First Search</option>
           <option value="BreadthFirstSearch">Breadth First Search</option>
+          <option value="Dijkstra">Dijkstra's Algorithm</option>
+          <option value="DepthFirstSearch">Depth First Search</option>
         </select>
       </label>
 
@@ -206,20 +265,36 @@ const Controls = (props) => {
         </select>
       </label>
 
-      {/* reset board  */}
-      <button onClick={() => {
-        //?! Poor practice: make width and heigh global state variables
-        const width = Math.floor(document.getElementById('main').offsetWidth/25)
-        const height = Math.floor((window.innerHeight-275)/25)
-        resetBoard(makeGrid(width, height))
-        }}>
-        Reset Board
-      </button>
+      {/* toggle paintbrush */}
+      <label>
+        Draw Obstacles:<br/>
+        <select value={paintbrush} onChange={(e) => handleChangePaintbrush(e)}>
+          <option value="water">Water (impassible)</option>
+          <option value="mountain">Mountain (weight6)</option>
+          <option value="foothill">Foothill (weight 5)</option>
+          <option value="forest">Forest (weight 4)</option>
+          <option value="woods">Woods (weight 3)</option>
+          <option value="brush">Brush (weight 2)</option>
+          <option value="field">Field (weight 1)</option>
+        </select>
+      </label>
+
+
+
+      {/* play button */}
+      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
 
       {/* clear visited nodes */}
-      <button onClick={() => clearVisitedNodes()}>
-        Clear Visited Nodes
-      </button>
+      <button onClick={() => clearVisitedNodes()}>Clear Visited Nodes</button>
+
+      {/* reset board  */}
+      <button onClick={() => handleResetBoard()}>Reset Board</button>
+
+      {/* randomly set weights on all normal nodes */}
+      {selectedAlgorithm === 'Dijkstra' && <button onClick={() => setRandomWeights()}>Generate Random Weights</button>}
+
+      {/* clear weights on all nodes  */}
+      {selectedAlgorithm === 'Dijkstra' && <button onClick={() => resetAllWeights()}> Clear Weights </button>}
 
     </div>
 

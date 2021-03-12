@@ -26,8 +26,8 @@ const GridKey = (props) => {
       <h3>Shortest Path</h3>
     </div>
     <div className='keyitem'>
-      <div className='keybox wall'></div>
-      <h3>Wall</h3>
+      <div className='keybox water'></div>
+      <h3>Water</h3>
     </div>
   </div>
   )

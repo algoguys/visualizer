@@ -1,6 +1,6 @@
 import React, { useState }from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { updateType, updateStart, updateEnd } from '../store/grid'
+import { updateType, updateStart, updateEnd, updateWeight } from '../store/grid'
 import { setDrawingTrue, setDrawingFalse} from '../store/drawing'
 // { setDraggingEndTrue, setDraggingEndFalse, setDraggingStartTrue, setDraggingStartFalse, updatePreviousCell } from '../store'
 import { setDraggingEndTrue, setDraggingEndFalse } from '../store/draggingEnd'
@@ -8,6 +8,7 @@ import { setDraggingStartTrue, setDraggingStartFalse } from '../store/draggingSt
 import { updatePreviousCell } from '../store/previousCellType'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faMapMarker, faTimes} from '@fortawesome/free-solid-svg-icons'
+import Dijkstra from '../algorithms/dijkstra'
 
 
 const Row = (props) => {
@@ -17,6 +18,7 @@ const Row = (props) => {
   const draggingStart = useSelector(state => state.isDraggingStart)
   const draggingEnd = useSelector(state => state.isDraggingEnd)
   const previousCell = useSelector(state => state.previousCellType)
+  const paintbrush = useSelector(state => state.paintbrush)
 
   const updateGrid = useDispatch()
   const updateCell = useDispatch()
@@ -25,13 +27,72 @@ const Row = (props) => {
   const dispatchDraggingEnd = useDispatch()
   const dispatchPreviousCell = useDispatch()
 
-  const drawWall = (node) => {
-    let newType = node.type === 'wall' ? 'normal' : 'wall'
-    if(node.type !== 'start' && node.type !== 'end') {
-      updateCell(updateType(node.id, newType))
+  const drawSelected = (node) => {
+
+    //let newType = node.type === 'water' ? 'normal' : 'water'
+    switch(paintbrush){
+      case 'water':
+        updateCell(updateType(node.id, 'water'))
+        break;
+      case 'mountain':
+        updateGrid(updateWeight(node.id, 6))
+        updateCell(updateType(node.id, 'normal'))
+        break;
+      case 'foothill':
+        updateGrid(updateWeight(node.id, 5))
+        updateCell(updateType(node.id, 'normal'))
+        break;
+      case 'forest':
+        updateGrid(updateWeight(node.id, 4))
+        updateCell(updateType(node.id, 'normal'))
+        break;
+      case 'woods':
+        updateGrid(updateWeight(node.id, 3))
+        updateCell(updateType(node.id, 'normal'))
+        break;
+      case 'brush':
+        updateGrid(updateWeight(node.id, 2))
+        updateCell(updateType(node.id, 'normal'))
+        break;
+      case 'field':
+        updateGrid(updateWeight(node.id, 1))
+        updateCell(updateType(node.id, 'normal'))
+        break;
+      default:
+        break;
+
+
     }
+
+    console.log(node)
+    // if(node.type !== 'start' && node.type !== 'end') {
+    // }
   }
 
+  //! for testing djikstra, delete later
+  // if (grid[0]) {
+  //   const dijkstra = new Dijkstra(grid)
+  //   console.log('compare to length of grid', Object.keys(grid).length)
+  //   dijkstra.run()
+  // }
+
+
+  function hanleOnMouseDown(event, cellId) {
+    event.preventDefault();
+    // drawing logic
+    if (!running.isRunning && !drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
+      dispatchDrawing(setDrawingTrue());
+      drawSelected(grid[cellId])
+    }
+    else if (!running.isRunning && !draggingStart.isDraggingStart && grid[cellId].type === 'start' ){
+      dispatchDraggingStart(setDraggingStartTrue())
+      console.log('start dragging the start')
+    }
+    else if (!running.isRunning && !draggingEnd.isDraggingEnd && grid[cellId].type === 'end'){
+      dispatchDraggingEnd(setDraggingEndTrue())
+      console.log('start dragging the end')
+    }
+  }
     return (
       <tr>
         {
@@ -47,7 +108,7 @@ const Row = (props) => {
               typeClass = "end"
             }
             else if (grid[cellId].type === 'normal') typeClass = "normal"
-            else if (grid[cellId].type === 'wall') typeClass = "wall"
+            else if (grid[cellId].type === 'water') typeClass = "water"
 
 
             let visitedClass = "unvisited"
@@ -56,24 +117,12 @@ const Row = (props) => {
             else if (grid[cellId].status === 'shortestPath') visitedClass = "shortestPath"
 
           return <td key={idx} id={cellId} cellid={cellId} className={`${typeClass} ${visitedClass}`}
-          onMouseDown={() => {
-            if (!running.isRunning && !drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end') {
-              dispatchDrawing(setDrawingTrue());
-              drawWall(grid[cellId])
-            }
-            else if (!running.isRunning && !draggingStart.isDraggingStart && grid[cellId].type === 'start' ){
-              dispatchDraggingStart(setDraggingStartTrue())
-              console.log('start dragging the start')
-            }
-            else if (!running.isRunning && !draggingEnd.isDraggingEnd && grid[cellId].type === 'end'){
-              dispatchDraggingEnd(setDraggingEndTrue())
-              console.log('start dragging the end')
-            }
-          }}
+          onMouseDown={(e => hanleOnMouseDown(e, cellId))}
           onMouseOver={(e) => {
             //console.log('previous cell', previousCell)
-            if(drawing.isDrawing){
-              drawWall(grid[cellId])
+            e.preventDefault()
+            if(drawing.isDrawing && grid[cellId].type !== 'start' && grid[cellId].type !== 'end'){
+              drawSelected(grid[cellId])
             }
             else if(draggingStart.isDraggingStart){
               if(grid[cellId].type !== 'end') {
@@ -97,6 +146,7 @@ const Row = (props) => {
             }
           }}
           onMouseOut={(e) => {
+            e.preventDefault()
             if(draggingStart.isDraggingStart) {
               if(grid[cellId].type !== 'end') {
                 updateCell(updateType(cellId, previousCell.type))
@@ -107,6 +157,7 @@ const Row = (props) => {
             }
           }}
           onMouseUp={(e) => {
+            e.preventDefault()
             if (drawing.isDrawing) dispatchDrawing(setDrawingFalse())
             else if (draggingStart.isDraggingStart) {
               dispatchDraggingStart(setDraggingStartFalse())
@@ -124,6 +175,7 @@ const Row = (props) => {
           {grid[cellId].type === "start" && <FontAwesomeIcon id="startNodeIcon" icon={faChevronRight} />}
 
           {grid[cellId].type === "end" && <FontAwesomeIcon id="endNodeIcon" icon={faTimes} />}
+          {grid[cellId].type === "normal" && grid[cellId].weight > 1 && grid[cellId].weight}
           </td>
           }))
         }
