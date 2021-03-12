@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
 import { updateStatus, makeGrid, updateWeight } from '../store/grid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
 import BreadthFirstSearch from '../algorithms/breadthFirst'
 import Dijkstra from '../algorithms/dijkstra'
 import { setRunningTrue, setRunningFalse } from '../store/running'
 import { changeBrush } from "../store/paintbrush";
+
 
 
 const Controls = (props) => {
@@ -16,7 +17,11 @@ const Controls = (props) => {
   const grid = useSelector(state => state.grid)
   const paintbrush = useSelector(state => state.paintbrush)
 
+
+
   // ********** local state ************** //
+  // is the running algo paused?
+  const [isPaused, setPause] = useState(false)
   // currently selected speed
   const [speed, setSpeed] = useState(40)
   // currently select algorithm
@@ -48,7 +53,7 @@ const Controls = (props) => {
         case 'BreadthFirstSearch':
           setDestinationFinder(new BreadthFirstSearch(grid))
           break;
-        case 'Dijkstra':
+          case 'Dijkstra':
           setDestinationFinder(new Dijkstra(grid))
           break;
         default:
@@ -61,7 +66,7 @@ const Controls = (props) => {
   // update results if destinationFinder changes
   // useEffect(() => {
   //   switch (selectedAlgorithm) {
-  //     case 'DepthFirstSearch':
+    //     case 'DepthFirstSearch':
   //     case 'BreadthFirstSearch':
   //       resetAllWeights()
   //       break;
@@ -88,30 +93,11 @@ const Controls = (props) => {
 
     if(running.isRunning){
       //destroy all previously created timeouts
-      let killTimeouts = setTimeout(function() {
-        for (let i = killTimeouts; i > lastTimeoutId; i--) {
-          clearTimeout(i)
-        }
-      }, 0);
-      setLastTimeoutId(killTimeouts)
+      clearAllTimeouts()
 
       //Re-initialized visualizeVisited or visualizeShortestPath based on the last processed timeout (local state)
       // if last processedVisted == visted.length -1 that means all visited elements have been processed, so move on to shortestPath
-      if(lastProcessedVisited < visited.length-1) {
-        const remaining = visited.slice(lastProcessedVisited)
-        visualizeVisited(remaining)
-        setTimeout( () => {
-          visualizeShortestPath(results.shortestPath)
-        }, remaining.length * speed)
-      } else {
-        let remaining = []
-        if(results.shortestPath !==0 && shortestPath.length === 0){
-          remaining = results.shortestPath.slice(lastProcessedShortestPath)
-        } else if (shortestPath.length > 0 ) {
-          remaining = shortestPath.slice(lastProcessedShortestPath)
-        }
-        visualizeShortestPath(remaining);
-      }
+      resume()
     }
   }, [speed])
 
@@ -155,7 +141,34 @@ const Controls = (props) => {
     }
   }
 
+  const clearAllTimeouts = () => {
+    //destroy all previously created timeouts
+    let killTimeouts = setTimeout(function() {
+      for (let i = killTimeouts; i > lastTimeoutId; i--) {
+        clearTimeout(i)
+      }
+    }, 0);
+    setLastTimeoutId(killTimeouts)
 
+  }
+
+  const resume = () => {
+    if(lastProcessedVisited < visited.length-1) {
+      const remaining = visited.slice(lastProcessedVisited)
+      visualizeVisited(remaining)
+      setTimeout( () => {
+        visualizeShortestPath(results.shortestPath)
+      }, remaining.length * speed)
+    } else {
+      let remaining = []
+      if(results.shortestPath !==0 && shortestPath.length === 0){
+        remaining = results.shortestPath.slice(lastProcessedShortestPath)
+      } else if (shortestPath.length > 0 ) {
+        remaining = shortestPath.slice(lastProcessedShortestPath)
+      }
+      visualizeShortestPath(remaining);
+    }
+  }
   // Iterate through visited arr creating timeout function at each idx.
   // Callback function updates cell status to visited
   // Delay is set to idx * speed (local state)
@@ -172,7 +185,7 @@ const Controls = (props) => {
         // update cell status to visited
         updateCell(updateStatus(nodeId, 'visited'))
         // setRunning to false when last item in arr executes AND no valid shortestPath is found
-        if(idx === arr.length - 1 && shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
+        if(idx === arr.length - 1 && results.shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
         setLastProcessedVisited(idx)
       }, idx * speed)
     })
@@ -209,9 +222,17 @@ const Controls = (props) => {
       // updates the status of cells in shortestPath to shortestPath
       setTimeout( () => visualizeShortestPath(results.shortestPath), results.visited.length * speed )
 
-    } else {
+    } else if (isPaused && running.isRunning) {
       console.log('already running')
+      setPause(false)
+      resume()
     }
+  }
+
+
+  const handlePause = () => {
+    setPause(true)
+    clearAllTimeouts()
   }
 
   const handleChangeAlgorithm = (event) => {
@@ -235,8 +256,17 @@ const Controls = (props) => {
     selectedAlgorithm == 'Dijkstra' ? setRandomWeights() : resetAllWeights()
   }
 
+  let playPause = ''
+
   if(!running.isRunning){
-    // console.log('not running')
+    /* play button */
+    playPause = <FontAwesomeIcon className="playPause" icon={faPlay} size="4x" onClick ={() => {handleRun()}}/>
+  } else if (running.isRunning && !isPaused) {
+    /* pause button */
+    playPause = <FontAwesomeIcon className="playPause" icon={faPause} size="4x" onClick ={() => {handlePause()}}/>
+  } else if (running.isRunning && isPaused) {
+    /* play button */
+    playPause = <FontAwesomeIcon className="playPause" icon={faPlay} size="4x" onClick ={() => {handleRun()}}/>
   }
 
   return (
@@ -279,10 +309,8 @@ const Controls = (props) => {
         </select>
       </label>
 
-
-
-      {/* play button */}
-      <FontAwesomeIcon id="playAlgo" icon={faPlay} size="4x" onClick ={() => {handleRun()}} className={running.isRunning ? 'unclickable-control' : 'clickable-control'}/>
+      {/* render either play or pause button depending on state */}
+      {playPause}
 
       {/* clear visited nodes */}
       <button onClick={() => clearVisitedNodes()}>Clear Visited Nodes</button>
