@@ -7,21 +7,35 @@
   --visited-final: #12aeed;
   --shortest-Path: #ffe017;
   --hover-buttons: #12aeed;
-  --field-color: #f5deb3;
+  /* --field-color: #f5deb3;
   --brush-color: #c19a6b;
   --woods-color: green;
   --forest-color: #195905;
   --foothill-color: #738276;
-  --mountain-color: #36454f;
+  --mountain-color: #36454f; */
+}
+
+body {
+  color: white;
+  background-color: black;
+}
+
+table,
+tr,
+td {
+  border: 1px inset black;
+  border-collapse: collapse;
+  border-spacing: 1px;
 }
 
 td {
-  height: 25px;
-  width: 25px;
+  height: 100px;
+  width: 100px;
   transition: background-color 0.35s ease;
   /* Controls color of cells*/
   /* background-color: #e6f9ff; */
-  background-color: var(--td-bg-color);
+  /* background-color: var(--td-bg-color); */
+  background-image: url(/public/[1]field.png);
 }
 
 td #startNodeIcon {
@@ -64,14 +78,32 @@ table {
 }
 
 /* types */
+.brush {
+  background-image: url(/public/[2]brush.png);
+}
+.woods {
+  background-image: url(/public/[3]woods.png);
+}
+.forest {
+  background-image: url(/public/[4]forest.png);
+}
+.tundra {
+  background-image: url(/public/[5]tundra.png);
+}
+.taiga {
+  background-image: url(/public/[6]taiga.png);
+}
 .water {
-  background-color: var(--water-color);
+  /* background-color: var(--water-color); */
+  background-image: url(/public/water.png);
 }
 .start {
-  background-color: var(--td-bg-color);
+  /* background-color: var(--td-bg-color); */
+  background-image: url(/public/start.png);
 }
 .end {
-  background-color: var(--td-bg-color);
+  /* background-color: var(--td-bg-color); */
+  background-image: url(/public/end.png);
 }
 
 @keyframes sample {

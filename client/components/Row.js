@@ -34,29 +34,29 @@ const Row = (props) => {
       case 'water':
         updateCell(updateType(node.id, 'water'))
         break;
-      case 'mountain':
+      case 'taiga':
         updateGrid(updateWeight(node.id, 6))
-        updateCell(updateType(node.id, 'normal'))
+        updateCell(updateType(node.id, 'taiga'))
         break;
-      case 'foothill':
+      case 'tundra':
         updateGrid(updateWeight(node.id, 5))
-        updateCell(updateType(node.id, 'normal'))
+        updateCell(updateType(node.id, 'tundra'))
         break;
       case 'forest':
         updateGrid(updateWeight(node.id, 4))
-        updateCell(updateType(node.id, 'normal'))
+        updateCell(updateType(node.id, 'forest'))
         break;
       case 'woods':
         updateGrid(updateWeight(node.id, 3))
-        updateCell(updateType(node.id, 'normal'))
+        updateCell(updateType(node.id, 'woods'))
         break;
       case 'brush':
         updateGrid(updateWeight(node.id, 2))
-        updateCell(updateType(node.id, 'normal'))
+        updateCell(updateType(node.id, 'brush'))
         break;
       case 'field':
         updateGrid(updateWeight(node.id, 1))
-        updateCell(updateType(node.id, 'normal'))
+        updateCell(updateType(node.id, 'field'))
         break;
       default:
         break;
@@ -107,7 +107,12 @@ const Row = (props) => {
             else if (grid[cellId].type === 'end') {
               typeClass = "end"
             }
-            else if (grid[cellId].type === 'normal') typeClass = "normal"
+            else if (grid[cellId].type === 'field') typeClass = "field"
+            else if (grid[cellId].type === 'brush') typeClass = "brush"
+            else if (grid[cellId].type === 'woods') typeClass = "woods"
+            else if (grid[cellId].type === 'forest') typeClass = "forest"
+            else if (grid[cellId].type === 'tundra') typeClass = "tundra"
+            else if (grid[cellId].type === 'taiga') typeClass = "taiga"
             else if (grid[cellId].type === 'water') typeClass = "water"
 
 
@@ -162,12 +167,12 @@ const Row = (props) => {
             else if (draggingStart.isDraggingStart) {
               dispatchDraggingStart(setDraggingStartFalse())
               updateGrid(updateStart(cellId))
-              dispatchPreviousCell(updatePreviousCell('normal'))
+              dispatchPreviousCell(updatePreviousCell('field'))
             }
             else if (draggingEnd.isDraggingEnd) {
               dispatchDraggingEnd(setDraggingEndFalse())
               updateGrid(updateEnd(cellId))
-              dispatchPreviousCell(updatePreviousCell('normal'))
+              dispatchPreviousCell(updatePreviousCell('field'))
             }
           }}
 
