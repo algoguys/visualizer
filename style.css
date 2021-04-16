@@ -36,6 +36,7 @@ td {
   /* background-color: #e6f9ff; */
   /* background-color: var(--td-bg-color); */
   background-image: url(/public/[1]field.png);
+  background-size: cover;
 }
 
 td #startNodeIcon {
@@ -118,6 +119,7 @@ table {
 /* statuses */
 .visited {
   background-color: var(--visited-final);
+  background-blend-mode: overlay;
   animation-name: sample;
   animation-duration: 2s;
   /* background: orange; */
@@ -125,12 +127,14 @@ table {
 
 .start.visited {
   background-color: var(--visited-final);
+  background-blend-mode: overlay;
   animation-name: sample;
   /* background-color: #00B383;
   background-color: #00B0E6; */
 }
 .end.visited {
   background-color: var(--visited-final);
+  background-blend-mode: overlay;
   animation-name: sample;
   /* background-color: #00B383;
   background-color: #00B0E6; */
@@ -141,15 +145,19 @@ table {
 
 .shortestPath {
   background-color: var(--shortest-Path);
+  background-blend-mode: overlay;
 }
 .start.shortestPath {
   background-color: var(--shortest-Path);
+  background-blend-mode: overlay;
 }
 .end.shortestPath {
   background-color: var(--shortest-Path);
+  background-blend-mode: overlay;
 }
 .water.shortestPath {
   background-color: var(--water-color);
+  background-blend-mode: overlay;
 }
 
 /* GridKey Component */

@@ -63,11 +63,11 @@ const Controls = (props) => {
       }
   }, [grid, selectedAlgorithm])
 
-  // randomize the weights on changing selected algo
+  //? need to figure out how to randomize the weights on load
   useEffect(() => {
     setRandomWeights()
     console.log('randomized weights')
-  }, [selectedAlgorithm])
+  }, [])
 
 
   // update results if destinationFinder changes

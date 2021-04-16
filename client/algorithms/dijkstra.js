@@ -57,7 +57,7 @@ export default class Dijkstra extends Algorithm {
 
       // check each neighbors
       this.grid[currId].neighbors.forEach((neighborId) => {
-        if(this.grid[neighborId].type === 'normal' || this.grid[neighborId].type === 'end' ) {
+        if(this.grid[neighborId].type !== 'start' && this.grid[neighborId].type !== 'water') {
           const neighborNode = lookup[neighborId]
           const currNode = lookup[currId]
 
