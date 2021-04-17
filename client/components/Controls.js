@@ -63,7 +63,7 @@ const Controls = (props) => {
       }
   }, [grid, selectedAlgorithm])
 
-  //? need to figure out how to randomize the weights on load
+  //? need to figure out how to randomize the weights on load, maybe modify adjList so it generates the grid w/ random weights
   useEffect(() => {
     setRandomWeights()
     console.log('randomized weights')

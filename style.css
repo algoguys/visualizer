@@ -36,7 +36,7 @@ td {
   /* background-color: #e6f9ff; */
   /* background-color: var(--td-bg-color); */
   background-image: url(/public/[1]field.png);
-  background-size: cover;
+  background-size: contain;
 }
 
 td #startNodeIcon {
@@ -171,6 +171,23 @@ table {
   justify-content: center;
   align-items: center;
 }
+
+#startKey {
+  background-image: url(/public/start_key.png);
+}
+
+#endKey {
+  background-image: url(/public/end_key.png);
+}
+
+#visitedKey {
+  background-color: var(--visited-final);
+}
+
+#shortestPathKey {
+  background-color: var(--shortest-Path);
+}
+
 .keyitem h3 {
   font-size: 1rem;
 }

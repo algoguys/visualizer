@@ -6,19 +6,19 @@ const GridKey = (props) => {
   return (
   <div className='gridKey'>
     <div className='keyitem'>
-      <div className='keybox start'>
+      <div className='keybox' id= 'startKey'>
         <FontAwesomeIcon id="startKeyIcon" icon={faChevronRight} />
       </div>
       <h3>Start</h3>
     </div>
     <div className='keyitem'>
-      <div className='keybox end'>
+      <div className='keybox endKey' id='endKey'>
         <FontAwesomeIcon id="endKeyIcon" icon={faTimes} />
       </div>
       <h3>End</h3>
     </div>
     <div className='keyitem'>
-      <div className='keybox visited'></div>
+      <div className='keybox' id='visitedKey'></div>
       <h3>Visited</h3>
     </div>
     <div className='keyitem'>
