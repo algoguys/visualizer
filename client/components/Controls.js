@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { updateStatus, makeGrid, updateWeight } from '../store/grid'
+import { updateStatus, makeGrid, updateWeight, updateType} from '../store/grid'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
@@ -53,15 +53,22 @@ const Controls = (props) => {
         case 'BreadthFirstSearch':
           setDestinationFinder(new BreadthFirstSearch(grid))
           break;
-          case 'Dijkstra':
+        case 'Dijkstra':
           setDestinationFinder(new Dijkstra(grid))
           break;
         default:
           break;
       }
-      // console.log('destinationFinder updated', destinationFinder)
-    }
+        // console.log('destinationFinder updated', destinationFinder)
+      }
   }, [grid, selectedAlgorithm])
+
+  //? need to figure out how to randomize the weights on load, maybe modify adjList so it generates the grid w/ random weights
+  useEffect(() => {
+    setRandomWeights()
+    console.log('randomized weights')
+  }, [])
+
 
   // update results if destinationFinder changes
   // useEffect(() => {
@@ -102,12 +109,12 @@ const Controls = (props) => {
   }, [speed])
 
 
-
   const updateCell = useDispatch();
   const dispatchRunningTrue = useDispatch();
   const dispatchRunningFalse = useDispatch();
   const resetBoard = useDispatch();
   const dispatchWeight = useDispatch();
+  const dispatchType = useDispatch()
   const updatePaintbrush = useDispatch();
 
   const clearVisitedNodes = () => {
@@ -124,19 +131,45 @@ const Controls = (props) => {
 
   const setRandomWeights = () => {
     for(const nodeId in grid) {
-      if(grid[nodeId].id && grid[nodeId].type ==='normal'){
+      if(grid[nodeId].id && grid[nodeId].type !== 'start' && grid[nodeId].type !== 'end'){
         //assign newWeight a value between 1 and 6
         const newWeight = Math.floor(Math.random() * Math.floor(6)) + 1
         //console.log(newWeight)
         dispatchWeight(updateWeight(nodeId, newWeight))
+        let newType = ''
+        switch(newWeight) {
+          case 1:
+            newType = 'field'
+            break
+          case 2:
+            newType = 'brush'
+            break
+          case 3:
+            newType = 'woods'
+            break
+          case 4:
+            newType = 'forest'
+            break
+          case 5:
+            newType = 'tundra'
+            break
+          case 6:
+            newType = 'taiga'
+            break
+        }
+        dispatchType(updateType(nodeId, newType))
       }
     }
+    console.log('grid after random', grid)
   }
 
   const resetAllWeights = () => {
     for(const nodeId in grid) {
       if(grid[nodeId].id){
         dispatchWeight(updateWeight(nodeId, 1))
+        if (grid[nodeId].type !== 'start' && grid[nodeId].type !== 'end')
+        dispatchType(updateType(nodeId, 'field'))
+
       }
     }
   }
@@ -250,10 +283,10 @@ const Controls = (props) => {
 
   const handleResetBoard = (e) => {
     //?! Poor practice: make width and heigh global state variables
-    const width = Math.floor(document.getElementById('main').offsetWidth/25)
-    const height = Math.floor((window.innerHeight-275)/25)
+    const width = Math.floor(document.getElementById('main').offsetWidth/100)
+    const height = Math.floor((window.innerHeight-275)/100)
     resetBoard(makeGrid(width, height))
-    selectedAlgorithm == 'Dijkstra' ? setRandomWeights() : resetAllWeights()
+    setRandomWeights()
   }
 
   let playPause = ''
@@ -300,8 +333,8 @@ const Controls = (props) => {
         Draw Obstacles:<br/>
         <select value={paintbrush} onChange={(e) => handleChangePaintbrush(e)}>
           <option value="water">Water (impassible)</option>
-          <option value="mountain">Mountain (weight6)</option>
-          <option value="foothill">Foothill (weight 5)</option>
+          <option value="taiga">Taiga (weight 6)</option>
+          <option value="tundra">Tundra (weight 5)</option>
           <option value="forest">Forest (weight 4)</option>
           <option value="woods">Woods (weight 3)</option>
           <option value="brush">Brush (weight 2)</option>

@@ -1,4 +1,3 @@
-
 // take width and height
 // num of nodes = width * height
 // iterate thru nodes
