@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "./node_modules/.bin/webpack-dev-server --content-base --inline --hot",
-    "start": "node client",
+    "start": "node client/app.js",
     "build": "webpack -p"
   },
   "dependencies": {
