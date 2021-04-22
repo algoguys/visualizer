@@ -1,7 +1,10 @@
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
  module.exports = {
      entry: './client/app.js',
      output: {
-         path: './dist',
+         path: path.resolve(__dirname, 'build'),
          filename: 'app.bundle.js',
      },
      module: {
@@ -14,5 +17,10 @@
                 plugins: ['react-html-attrs', 'transform-class-properties','transform-decorators-legacy']
              }
          }]
-     }
+     },
+    plugins: [
+        new HtmlWebpackPlugin({
+          template: path.resolve('./index.html'),
+        }),
+    ]
  }
