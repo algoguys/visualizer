@@ -1,5 +1,6 @@
 {
   "name": "redux-starter",
+  "type": "module",
   "version": "1.0.0",
   "description": "React redux boilerplate",
   "main": "app.js",
