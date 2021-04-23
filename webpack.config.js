@@ -1,26 +1,29 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const isDev = process.env.NODE_ENV === 'development'
 
- module.exports = {
-     entry: './client/app.js',
-     output: {
-         path: path.resolve(__dirname, 'build'),
-         filename: 'app.bundle.js',
-     },
-     module: {
-         loaders: [{
-             test: /\.jsx?$/,
-             exclude: /node_modules/,
-             loader: 'babel-loader',
-             query: {
-                presets: ['es2015','react','stage-0'],
-                plugins: ['react-html-attrs', 'transform-class-properties','transform-decorators-legacy']
-             }
-         }]
-     },
-    plugins: [
-        new HtmlWebpackPlugin({
-          template: path.resolve('./index.html'),
-        }),
+module.exports = {
+  mode: isDev ? 'development' : 'production',
+  entry: [
+    '@babel/polyfill', // enables async-await
+    './client/index.js'
+  ],
+  output: {
+    path: __dirname,
+    filename: './public/bundle.js'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
+  devtool: 'source-map',
+  watchOptions: {
+    ignored: /node_modules/
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      }
     ]
- }
+  }
+}

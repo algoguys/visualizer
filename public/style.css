@@ -35,7 +35,7 @@ td {
   /* Controls color of cells*/
   /* background-color: #e6f9ff; */
   /* background-color: var(--td-bg-color); */
-  background-image: url(/public/[1]field.png);
+  background-image: url(/images/[1]field.png);
   background-size: contain;
 }
 
@@ -80,31 +80,31 @@ table {
 
 /* types */
 .brush {
-  background-image: url(/public/[2]brush.png);
+  background-image: url(/images/[2]brush.png);
 }
 .woods {
-  background-image: url(/public/[3]woods.png);
+  background-image: url(/images/[3]woods.png);
 }
 .forest {
-  background-image: url(/public/[4]forest.png);
+  background-image: url(/images/[4]forest.png);
 }
 .tundra {
-  background-image: url(/public/[5]tundra.png);
+  background-image: url(/images/[5]tundra.png);
 }
 .taiga {
-  background-image: url(/public/[6]taiga.png);
+  background-image: url(/images/[6]taiga.png);
 }
 .water {
   /* background-color: var(--water-color); */
-  background-image: url(/public/water.png);
+  background-image: url(/images/water.png);
 }
 .start {
   /* background-color: var(--td-bg-color); */
-  background-image: url(/public/start.png);
+  background-image: url(/images/start.png);
 }
 .end {
   /* background-color: var(--td-bg-color); */
-  background-image: url(/public/end.png);
+  background-image: url(/images/end.png);
 }
 
 @keyframes sample {
@@ -173,11 +173,11 @@ table {
 }
 
 #startKey {
-  background-image: url(/public/start_key.png);
+  background-image: url(/images/start_key.png);
 }
 
 #endKey {
-  background-image: url(/public/end_key.png);
+  background-image: url(/images/end_key.png);
 }
 
 #visitedKey {
