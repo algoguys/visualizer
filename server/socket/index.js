@@ -16,6 +16,7 @@ module.exports = io => {
   //   emit: indicate the game is ready to start
   //   listener: render the gameBoard
 
+  //! code from warguys??? remove if it doesn't break anything
   //! allow player to join another game after gameOver, will have to take a look at why that functinoality initially didn't work
   //! handle case where a player tries to join a game that is already full and in progress
   let rooms = {}

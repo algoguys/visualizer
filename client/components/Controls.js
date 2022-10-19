@@ -1,23 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux'
-import { updateStatus, makeGrid, updateWeight, updateType} from '../store/grid'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons'
+import React, {useState, useEffect} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
+import {updateStatus, makeGrid, updateWeight, updateType} from '../store/grid'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faPlay, faPause} from '@fortawesome/free-solid-svg-icons'
 import DepthFirstSearch from '../algorithms/depthFirst'
 import BreadthFirstSearch from '../algorithms/breadthFirst'
 import Dijkstra from '../algorithms/dijkstra'
-import { setRunningTrue, setRunningFalse } from '../store/running'
-import { changeBrush } from "../store/paintbrush";
+import {setRunningTrue, setRunningFalse} from '../store/running'
+import {changeBrush} from '../store/paintbrush'
 
-
-
-const Controls = (props) => {
+const Controls = props => {
   // ********* global state ************** //
   const running = useSelector(state => state.isRunning)
   const grid = useSelector(state => state.grid)
   const paintbrush = useSelector(state => state.paintbrush)
-
-
 
   // ********** local state ************** //
   // is the running algo paused?
@@ -25,7 +21,9 @@ const Controls = (props) => {
   // currently selected speed
   const [speed, setSpeed] = useState(40)
   // currently select algorithm
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState('BreadthFirstSearch')
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState(
+    'BreadthFirstSearch'
+  )
   // object returned when calling run method of currently selected alogrithm
   // object contains the visited and shortestPath props
   const [results, setResults] = useState({})
@@ -43,25 +41,28 @@ const Controls = (props) => {
   // console.log(paintbrush)
 
   // update destination finder
-  useEffect(() => {
-    // console.log('set destination finder effect running')
-    if(grid[0] && !running.isRunning) {
-      switch (selectedAlgorithm) {
-        case 'DepthFirstSearch':
-          setDestinationFinder(new DepthFirstSearch(grid))
-          break;
-        case 'BreadthFirstSearch':
-          setDestinationFinder(new BreadthFirstSearch(grid))
-          break;
-        case 'Dijkstra':
-          setDestinationFinder(new Dijkstra(grid))
-          break;
-        default:
-          break;
-      }
+  useEffect(
+    () => {
+      // console.log('set destination finder effect running')
+      if (grid[0] && !running.isRunning) {
+        switch (selectedAlgorithm) {
+          case 'DepthFirstSearch':
+            setDestinationFinder(new DepthFirstSearch(grid))
+            break
+          case 'BreadthFirstSearch':
+            setDestinationFinder(new BreadthFirstSearch(grid))
+            break
+          case 'Dijkstra':
+            setDestinationFinder(new Dijkstra(grid))
+            break
+          default:
+            break
+        }
         // console.log('destinationFinder updated', destinationFinder)
       }
-  }, [grid, selectedAlgorithm])
+    },
+    [grid, selectedAlgorithm]
+  )
 
   //? need to figure out how to randomize the weights on load, maybe modify adjList so it generates the grid w/ random weights
   useEffect(() => {
@@ -69,11 +70,10 @@ const Controls = (props) => {
     console.log('randomized weights')
   }, [])
 
-
   // update results if destinationFinder changes
   // useEffect(() => {
   //   switch (selectedAlgorithm) {
-    //     case 'DepthFirstSearch':
+  //     case 'DepthFirstSearch':
   //     case 'BreadthFirstSearch':
   //       resetAllWeights()
   //       break;
@@ -86,36 +86,40 @@ const Controls = (props) => {
   // }, [selectedAlgorithm])
 
   // update results if destinationFinder changes
-  useEffect(() => {
-    // if desintationFinder has been initialized update results
-    if(destinationFinder !== -1) {
-      setResults({...destinationFinder.run()})
-    }
-  }, [destinationFinder])
-
+  useEffect(
+    () => {
+      // if desintationFinder has been initialized update results
+      if (destinationFinder !== -1) {
+        setResults({...destinationFinder.run()})
+      }
+    },
+    [destinationFinder]
+  )
 
   // change rate at which each cell's status is changed and displayed to UI when speed changes
-  useEffect(() => {
-    // console.log('speed updated', speed, arr)
+  useEffect(
+    () => {
+      // console.log('speed updated', speed, arr)
 
-    if(running.isRunning){
-      //destroy all previously created timeouts
-      clearAllTimeouts()
+      if (running.isRunning) {
+        //destroy all previously created timeouts
+        clearAllTimeouts()
 
-      //Re-initialized visualizeVisited or visualizeShortestPath based on the last processed timeout (local state)
-      // if last processedVisted == visted.length -1 that means all visited elements have been processed, so move on to shortestPath
-      resume()
-    }
-  }, [speed])
+        //Re-initialized visualizeVisited or visualizeShortestPath based on the last processed timeout (local state)
+        // if last processedVisted == visted.length -1 that means all visited elements have been processed, so move on to shortestPath
+        resume()
+      }
+    },
+    [speed]
+  )
 
-
-  const updateCell = useDispatch();
-  const dispatchRunningTrue = useDispatch();
-  const dispatchRunningFalse = useDispatch();
-  const resetBoard = useDispatch();
-  const dispatchWeight = useDispatch();
+  const updateCell = useDispatch()
+  const dispatchRunningTrue = useDispatch()
+  const dispatchRunningFalse = useDispatch()
+  const resetBoard = useDispatch()
+  const dispatchWeight = useDispatch()
   const dispatchType = useDispatch()
-  const updatePaintbrush = useDispatch();
+  const updatePaintbrush = useDispatch()
 
   const clearVisitedNodes = () => {
     //sorted array of properties in grid that correspond to node ids
@@ -123,21 +127,26 @@ const Controls = (props) => {
 
     //loops through keys to update status on each node before executing search
     keys.forEach((nodeId, idx) => {
-      if(idx < keys.length - 2) {
+      if (idx < keys.length - 2) {
         updateCell(updateStatus(nodeId, 'unvisited'))
       }
     })
   }
 
+  //! use this same logic to randomize grid on app start
   const setRandomWeights = () => {
-    for(const nodeId in grid) {
-      if(grid[nodeId].id && grid[nodeId].type !== 'start' && grid[nodeId].type !== 'end'){
+    for (const nodeId in grid) {
+      if (
+        grid[nodeId].id &&
+        grid[nodeId].type !== 'start' &&
+        grid[nodeId].type !== 'end'
+      ) {
         //assign newWeight a value between 1 and 6
         const newWeight = Math.floor(Math.random() * Math.floor(6)) + 1
         //console.log(newWeight)
         dispatchWeight(updateWeight(nodeId, newWeight))
         let newType = ''
-        switch(newWeight) {
+        switch (newWeight) {
           case 1:
             newType = 'field'
             break
@@ -164,12 +173,11 @@ const Controls = (props) => {
   }
 
   const resetAllWeights = () => {
-    for(const nodeId in grid) {
-      if(grid[nodeId].id){
+    for (const nodeId in grid) {
+      if (grid[nodeId].id) {
         dispatchWeight(updateWeight(nodeId, 1))
         if (grid[nodeId].type !== 'start' && grid[nodeId].type !== 'end')
-        dispatchType(updateType(nodeId, 'field'))
-
+          dispatchType(updateType(nodeId, 'field'))
       }
     }
   }
@@ -180,26 +188,25 @@ const Controls = (props) => {
       for (let i = killTimeouts; i > lastTimeoutId; i--) {
         clearTimeout(i)
       }
-    }, 0);
+    }, 0)
     setLastTimeoutId(killTimeouts)
-
   }
 
   const resume = () => {
-    if(lastProcessedVisited < visited.length-1) {
+    if (lastProcessedVisited < visited.length - 1) {
       const remaining = visited.slice(lastProcessedVisited)
       visualizeVisited(remaining)
-      setTimeout( () => {
+      setTimeout(() => {
         visualizeShortestPath(results.shortestPath)
       }, remaining.length * speed)
     } else {
       let remaining = []
-      if(results.shortestPath !==0 && shortestPath.length === 0){
+      if (results.shortestPath !== 0 && shortestPath.length === 0) {
         remaining = results.shortestPath.slice(lastProcessedShortestPath)
-      } else if (shortestPath.length > 0 ) {
+      } else if (shortestPath.length > 0) {
         remaining = shortestPath.slice(lastProcessedShortestPath)
       }
-      visualizeShortestPath(remaining);
+      visualizeShortestPath(remaining)
     }
   }
   // Iterate through visited arr creating timeout function at each idx.
@@ -210,7 +217,7 @@ const Controls = (props) => {
   //    idx 2 = 1000 timeout
   //    ...
   //    idx 10 = 5000 timeout
-  const visualizeVisited = (arr) => {
+  const visualizeVisited = arr => {
     //update local state shortestPath to be arr
     setVisited(arr)
     arr.forEach((nodeId, idx) => {
@@ -218,13 +225,14 @@ const Controls = (props) => {
         // update cell status to visited
         updateCell(updateStatus(nodeId, 'visited'))
         // setRunning to false when last item in arr executes AND no valid shortestPath is found
-        if(idx === arr.length - 1 && results.shortestPath.length === 0) dispatchRunningFalse(setRunningFalse())
+        if (idx === arr.length - 1 && results.shortestPath.length === 0)
+          dispatchRunningFalse(setRunningFalse())
         setLastProcessedVisited(idx)
       }, idx * speed)
     })
   }
 
-  const visualizeShortestPath = (arr) => {
+  const visualizeShortestPath = arr => {
     //update local state shortestPath to be arr
     setShortestPath(arr)
     arr.forEach((nodeId, idx) => {
@@ -232,19 +240,17 @@ const Controls = (props) => {
         // update cell status to shortestPath
         updateCell(updateStatus(nodeId, 'shortestPath'))
         // setRunning to false when last item in arr executes
-        if(idx === arr.length - 1) dispatchRunningFalse(setRunningFalse())
+        if (idx === arr.length - 1) dispatchRunningFalse(setRunningFalse())
         setLastProcessedShortestPath(idx)
       }, idx * speed)
     })
   }
 
-
-
   const handleRun = () => {
     if (running.isRunning === false) {
       dispatchRunningTrue(setRunningTrue())
 
-      clearVisitedNodes();
+      clearVisitedNodes()
 
       // console.log('results', results)
 
@@ -253,8 +259,10 @@ const Controls = (props) => {
 
       // Visualize shortestPath is only called after visited cells have been updated
       // updates the status of cells in shortestPath to shortestPath
-      setTimeout( () => visualizeShortestPath(results.shortestPath), results.visited.length * speed )
-
+      setTimeout(
+        () => visualizeShortestPath(results.shortestPath),
+        results.visited.length * speed
+      )
     } else if (isPaused && running.isRunning) {
       console.log('already running')
       setPause(false)
@@ -262,53 +270,81 @@ const Controls = (props) => {
     }
   }
 
-
   const handlePause = () => {
     setPause(true)
     clearAllTimeouts()
   }
 
-  const handleChangeAlgorithm = (event) => {
+  const handleChangeAlgorithm = event => {
     // update selectedAlgorithm state to current selection
-    setSelectedAlgorithm(event.target.value);
+    setSelectedAlgorithm(event.target.value)
   }
 
-  const handleChangeSpeed = (e) => {
+  const handleChangeSpeed = e => {
     setSpeed(parseInt(e.target.value))
   }
 
-  const handleChangePaintbrush = (e) => {
+  const handleChangePaintbrush = e => {
     updatePaintbrush(changeBrush(e.target.value))
   }
 
-  const handleResetBoard = (e) => {
+  const handleResetBoard = e => {
     //?! Poor practice: make width and heigh global state variables
-    const width = Math.floor(document.getElementById('main').offsetWidth/100)
-    const height = Math.floor((window.innerHeight-275)/100)
+    const width = Math.floor(document.getElementById('main').offsetWidth / 100)
+    const height = Math.floor((window.innerHeight - 275) / 100)
     resetBoard(makeGrid(width, height))
     setRandomWeights()
   }
 
   let playPause = ''
 
-  if(!running.isRunning){
+  if (!running.isRunning) {
     /* play button */
-    playPause = <FontAwesomeIcon className="playPause" icon={faPlay} size="4x" onClick ={() => {handleRun()}}/>
+    playPause = (
+      <FontAwesomeIcon
+        className="playPause"
+        icon={faPlay}
+        size="4x"
+        onClick={() => {
+          handleRun()
+        }}
+      />
+    )
   } else if (running.isRunning && !isPaused) {
     /* pause button */
-    playPause = <FontAwesomeIcon className="playPause" icon={faPause} size="4x" onClick ={() => {handlePause()}}/>
+    playPause = (
+      <FontAwesomeIcon
+        className="playPause"
+        icon={faPause}
+        size="4x"
+        onClick={() => {
+          handlePause()
+        }}
+      />
+    )
   } else if (running.isRunning && isPaused) {
     /* play button */
-    playPause = <FontAwesomeIcon className="playPause" icon={faPlay} size="4x" onClick ={() => {handleRun()}}/>
+    playPause = (
+      <FontAwesomeIcon
+        className="playPause"
+        icon={faPlay}
+        size="4x"
+        onClick={() => {
+          handleRun()
+        }}
+      />
+    )
   }
 
   return (
     <div className="controls">
-
       {/* toggle selectedAlgorithm */}
       <label>
-        Select Pathfinding Algorithm:<br/>
-        <select value={selectedAlgorithm} onChange={(e) => handleChangeAlgorithm(e)}>
+        Select Pathfinding Algorithm:<br />
+        <select
+          value={selectedAlgorithm}
+          onChange={e => handleChangeAlgorithm(e)}
+        >
           <option value="BreadthFirstSearch">Breadth First Search</option>
           <option value="Dijkstra">Dijkstra's Algorithm</option>
           <option value="DepthFirstSearch">Depth First Search</option>
@@ -317,21 +353,20 @@ const Controls = (props) => {
 
       {/* toggle speed */}
       <label>
-        Speed:<br/>
-        <select value={speed} onChange={(e) => handleChangeSpeed(e)}>
+        Speed:<br />
+        <select value={speed} onChange={e => handleChangeSpeed(e)}>
           <option value="20">Really Fast</option>
           <option value="40">Fast</option>
           <option value="75">Normal</option>
           <option value="150">Slow</option>
           <option value="250">Really Slow</option>
-
         </select>
       </label>
 
       {/* toggle paintbrush */}
       <label>
-        Draw Obstacles:<br/>
-        <select value={paintbrush} onChange={(e) => handleChangePaintbrush(e)}>
+        Draw Obstacles:<br />
+        <select value={paintbrush} onChange={e => handleChangePaintbrush(e)}>
           <option value="water">Water (impassible)</option>
           <option value="taiga">Taiga (weight 6)</option>
           <option value="tundra">Tundra (weight 5)</option>
@@ -348,9 +383,12 @@ const Controls = (props) => {
       {/* clear visited nodes */}
       <button onClick={() => clearVisitedNodes()}>Clear Visited Nodes</button>
 
-
       {/* randomly set weights on all normal nodes */}
-      {<button onClick={() => setRandomWeights()}>Generate Random Weights</button>}
+      {
+        <button onClick={() => setRandomWeights()}>
+          Generate Random Weights
+        </button>
+      }
 
       {/* clear weights on all nodes  */}
       {<button onClick={() => resetAllWeights()}> Clear Weights </button>}
@@ -358,7 +396,6 @@ const Controls = (props) => {
       {/* reset board  */}
       <button onClick={() => handleResetBoard()}>Reset Board</button>
     </div>
-
   )
 }
 
